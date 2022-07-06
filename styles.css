@@ -1,0 +1,50 @@
+.map {
+    width: 300px;
+    height: 300px;
+    background-color: #0a4715;
+    padding: 100px;
+    display: grid;
+    grid-gap: 5rem;
+    grid-template-rows: 50px 50px 50px;
+    grid-template-columns: 50px 50px 50px;
+}
+
+.town {
+    border-radius: 100%;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    line-height: 50px;
+    border-style: dashed;
+    border-color: #dc143c;
+}
+
+.button {
+    border-radius: 25%;
+    text-align: center;
+    line-height: 50px;
+}
+
+.road {
+    border-radius: 100%;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    line-height: 50px;
+    border-style: solid;
+    border-color: #00ff22;
+}
+
+.mountain {
+    border-radius: 100%;
+    text-align: center;
+    width: 75px;
+    height: 75px;
+    background-color: #ffffff;
+    line-height: 75px;
+    border-style: dashed;
+    border-color: #0000ff;
+
+}
