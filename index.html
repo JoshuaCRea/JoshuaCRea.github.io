@@ -1,62 +1,146 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
     <title>The Valley of the Star</title>
     <link href="styles.css" rel="stylesheet" type="text/css">
     <meta name="description" content="Our first page">
     <meta name="keywords" content="html tutorial template">
+    <meta charset="UTF-8">
 </head>
 
 <body>
     <div class="map">
-        <div class="town" id="townA">
-            town A
+        <div class="location town leapcreek" id="Leap-Creek">
+            Leap-Creek
         </div>
-        <div class="road" id="roadAB">
-            roadAB
+        <div class="location road roadLCBS" id="roadLCBS">
+            road
         </div>
-        <div class="town" id="townB">
-            town B
+        <div class="location town blackstone" id="Blackstone">
+            Blackstone
         </div>
-        <div class="road" id="roadAC">
-            roadAC
+        <div class="location road roadBSFM" id="roadBSFM">
+            road
         </div>
-        <div class= "mountain">
-            M
+        <div class="location town fangmarsh" id="Fangmarsh">
+            Fangmarsh
         </div>
-        <div class="road" id="roadBD">
-            roadBD
+        <div class="location road roadFMUC" id="roadFMUC">
+            road
         </div>
-        <div class="town" id="townC">
-            town C
+        <div class="location town underclaw" id="Underclaw">
+            Underclaw
         </div>
-        <div class="road" id="roadCD">
-            roadCD
+        <div class="location road roadUCP" id="roadUCP">
+            road
         </div>
-        <div class="town" id="townD">
-            town D
+        <div class="location town pouch" id="Pouch">
+            Pouch
+        </div>
+        <div class="location road roadPLC" id="roadPLC">
+            road
         </div>
     </div>
-    <div class="move-button" id="moveCwButton">
-        <button>Move CW</button>
-    </div>
-    <div class="move-button" id="moveCcwButton">
-        <button>Move CCW</button>
-    </div>
+
+    <table>
+        <tr>
+            <th>P1</th>
+            <th>P2</th>
+            <th>P3</th>
+            <th>P4</th>
+            <th>P5</th>
+        </tr>
+        <tr>
+            <td>
+                <div class="move-button" id="p1MoveCwButton">
+                    <button>Move CW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p2MoveCwButton">
+                    <button>Move CW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p3MoveCwButton">
+                    <button>Move CW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p4MoveCwButton">
+                    <button>Move CW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p5MoveCwButton">
+                    <button>Move CW</button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="move-button" id="p1MoveCcwButton">
+                    <button>Move CCW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p2MoveCcwButton">
+                    <button>Move CCW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p3MoveCcwButton">
+                    <button>Move CCW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p4MoveCcwButton">
+                    <button>Move CCW</button>
+                </div>
+            </td>
+            <td>
+                <div class="move-button" id="p5MoveCcwButton">
+                    <button>Move CCW</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <th>Player</th>
+            <th>Town Info</th>
+            <th>School</th>
+        </tr>
+        <tr>
+            <td>P1</td>
+            <td id="p1TownInfo"></td>
+            <td id="p1TownSchool"></td>
+        </tr>
+        <tr>
+            <td>P2</td>
+            <td id="p2TownInfo"></td>
+            <td id="p2TownSchool"></td>
+        </tr>
+        <tr>
+            <td>P3</td>
+            <td id="p3TownInfo"></td>
+            <td id="p3TownSchool"></td>
+        </tr>
+        <tr>
+            <td>P4</td>
+            <td id="p4TownInfo"></td>
+            <td id="p4TownSchool"></td>
+        </tr>
+        <tr>
+            <td>P5</td>
+            <td id="p5TownInfo"></td>
+            <td id="p5TownSchool"></td>
+        </tr>
+    </table>
 </body>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="app.js"></script>
 
 </html>
-
-
-
-
-
-<!-- <div class="left-button" id="leftbutton">
-    <button>Left</button>
-</div>
-<div class="right-button" id="rightbutton"></div>
-    <button>Right</button>
-</div> -->

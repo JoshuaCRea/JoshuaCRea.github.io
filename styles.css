@@ -1,43 +1,108 @@
 .map {
-    width: 300px;
-    height: 300px;
-    background-color: #0a4715;
-    padding: 100px;
-    display: grid;
-    grid-gap: 5rem;
-    grid-template-rows: 50px 50px 50px;
-    grid-template-columns: 50px 50px 50px;
-}
+    width:501px;
+    height:501px;
+    border-radius:50%;
+    background:rgb(36, 83, 44);
+    position:relative;
+    margin:100px;
+ }
 
-.town {
+ .location {
+    display:block;
+    position:absolute;
+    top:51%;
+    left:51%;
+    margin:-51px;
+    background:rgb(165, 143, 106);
+    border-radius:51%;
+    text-align:center;
+
+ }
+
+ .road {
+    width:50px;
+    height:50px;
+    line-height:50px;
+ }
+
+ table, th, td {
+    border: 1px solid black;
+ }
+
+ .town {
+    width:100px;
+    height:100px;
+    line-height:100px;
+ }
+
+ .leapcreek {
+    transform: translate(251px);
+ }
+ 
+ .roadLCBS {
+    transform:rotate(38deg) translate(277px) rotate(-36deg);
+ }
+ 
+ .blackstone {
+    transform:rotate(72deg) translate(251px) rotate(-72deg);
+ }
+ 
+ .roadBSFM {
+    transform:rotate(108deg) translate(265px) rotate(-108deg);
+ }
+ 
+ .fangmarsh {
+    transform:rotate(144deg) translate(251px) rotate(-144deg);
+ }
+ 
+ .roadFMUC {
+    transform:rotate(180deg) translate(228px) rotate(-180deg);
+ }
+ 
+ .underclaw {
+    transform:rotate(216deg) translate(251px) rotate(-216deg);
+ }
+ 
+ .roadUCP {
+    transform:rotate(252deg) translate(218px) rotate(-252deg);
+ }
+
+ .pouch {
+    transform:rotate(288deg) translate(251px) rotate(-288deg);
+ }
+ 
+ .roadPLC {
+    transform:rotate(324deg) translate(255px) rotate(-324deg);
+ }
+
+
+/* .button {
+    border-radius: 25%;
+    text-align: center;
+    line-height: 50px;
+} */
+
+/* .location {
     border-radius: 100%;
     text-align: center;
     width: 50px;
     height: 50px;
     background-color: #ffffff;
     line-height: 50px;
+    font-size: x-small;
+}
+
+.location.town {
     border-style: dashed;
     border-color: #dc143c;
 }
 
-.button {
-    border-radius: 25%;
-    text-align: center;
-    line-height: 50px;
-}
-
-.road {
-    border-radius: 100%;
-    text-align: center;
-    width: 50px;
-    height: 50px;
-    background-color: #ffffff;
-    line-height: 50px;
+.location.road {
     border-style: solid;
     border-color: #00ff22;
-}
+} */
 
-.mountain {
+/* .mountain {
     border-radius: 100%;
     text-align: center;
     width: 75px;
@@ -45,6 +110,6 @@
     background-color: #ffffff;
     line-height: 75px;
     border-style: dashed;
-    border-color: #0000ff;
-
-}
+    border-color: #4a0101;
+    font-size: small;
+/* } */
