@@ -28,7 +28,7 @@ const TOWN_DESCRIPTIONS = {
 
 var playerInfo = {
     "p1": {
-        "color": "aqua",
+        "color": '#47c3ed',
         "locationIndex": 0,
         "townInfoId": "#p1TownInfo",
         "townSchoolId": "#p1TownSchool",
