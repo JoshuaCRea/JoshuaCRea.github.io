@@ -1,5 +1,5 @@
 body {
-   background-color: #cacaca;
+   background-color: #D3DEDC;
 }
 
 .map {
@@ -48,7 +48,7 @@ td {
    width: 300px;
    height: 300px;
    position: relative;
-   transform: rotate(38deg) translate(125px) rotate(-36deg);
+   transform: rotate(38deg) translate(125px) rotate(-37.5deg);
 }
 
 .leapcreek {
@@ -96,6 +96,7 @@ td {
    text-align: center;
    margin-bottom: 60px;
    font-size: 300%;
+   color: #7C99AC;
 }
 
 .btn-lc {
