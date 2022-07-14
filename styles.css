@@ -44,6 +44,13 @@ td {
    line-height: 100px;
 }
 
+.mountain {
+   width: 300px;
+   height: 300px;
+   position: relative;
+   transform: rotate(38deg) translate(125px) rotate(-36deg);
+}
+
 .leapcreek {
    transform: translate(251px);
 }
@@ -78,7 +85,6 @@ td {
 
 .pouch {
    transform: rotate(288deg) translate(251px) rotate(-288deg);
-   3
 }
 
 .roadPLC {
@@ -88,7 +94,7 @@ td {
 .title {
    font-family: 'Berkshire Swash', cursive;
    text-align: center;
-   margin-bottom: 50px;
+   margin-bottom: 60px;
    font-size: 300%;
 }
 
@@ -395,14 +401,5 @@ td {
     border-color: #00ff22;
 } */
 
-/* .mountain {
-    border-radius: 100%;
-    text-align: center;
-    width: 75px;
-    height: 75px;
-    background-color: #ffffff;
-    line-height: 75px;
-    border-style: dashed;
-    border-color: #4a0101;
-    font-size: small;
+/* 
 /* } */
