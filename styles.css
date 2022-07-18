@@ -23,6 +23,12 @@ body {
    text-align: center;
 }
 
+.overlay {
+   position: absolute;
+   width: 100px;
+   height: 100px;
+}
+
 .road {
    width: 50px;
    height: 50px;
@@ -35,6 +41,7 @@ td {
    margin: 75px auto auto auto;
    font-family: 'Crimson Text', serif;
    font-size: 20px;
+   left: 0px;
 
 }
 
@@ -382,25 +389,3 @@ td {
    background-image: linear-gradient(to bottom, #cebcf7, #9678fa);
    text-decoration: none;
  }
-/* .location {
-    border-radius: 100%;
-    text-align: center;
-    width: 50px;
-    height: 50px;
-    background-color: #ffffff;
-    line-height: 50px;
-    font-size: x-small;
-}
-
-.location.town {
-    border-style: dashed;
-    border-color: #dc143c;
-}
-
-.location.road {
-    border-style: solid;
-    border-color: #00ff22;
-} */
-
-/* 
-/* } */

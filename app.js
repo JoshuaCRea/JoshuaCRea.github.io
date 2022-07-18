@@ -38,6 +38,8 @@ var playerInfo = {
         "locationIndex": 2,
         "townInfoId": "#p2TownInfo",
         "townSchoolId": "#p2TownSchool",
+        "uninjured-pip": "https://ucarecdn.com/6eaaa1c1-65cf-4643-b467-2b38c500b3b5/",
+        "injured-pip": "https://ucarecdn.com/2c4827a8-7afd-4097-abe7-9ba774939f7c/",
     },
     "p3": {
         "color": "crimson",
