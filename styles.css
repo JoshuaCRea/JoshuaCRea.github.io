@@ -3,18 +3,18 @@ body {
 }
 
 .map {
-   width: 501px;
-   height: 501px;
+   width: 601px;
+   height: 601px;
    border-radius: 50%;
-   background: rgb(36, 83, 44);
+   background: hsla(130, 39%, 23%, 0);
    position: relative;
    margin: 25px 25px 25px 50px;
    display: inline-block;
 }
 
 #valley-map {
-   width: 501px;
-   height: 501px;
+   width: 601px;
+   height: 601px;
    position: relative;
    display: inline-block;
    margin-bottom: 50px;
@@ -63,6 +63,7 @@ td {
    width: 300px;
    height: 300px;
    position: absolute;
+   display: inline-block;
    transform: rotate(38deg) translate(125px) rotate(-37.5deg);
 }
 

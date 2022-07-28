@@ -79,6 +79,7 @@ function onPageLoad() {
 function updateLocationIndex(directionValue, player) {
     playerInfo[player]["locationIndex"] = (((playerInfo[player]["locationIndex"] + directionValue) % LOCATION_IDS.length) + LOCATION_IDS.length) % LOCATION_IDS.length;
     updatePips();
+    updateTownInfo()
 }
 
 function updatePips() {
