@@ -73,7 +73,6 @@ onPageLoad()
 
 function onPageLoad() {
     updateTownInfo();
-    resetPips();
     updatePips();
 }
 
@@ -81,24 +80,6 @@ function updateLocationIndex(directionValue, player) {
     playerInfo[player]["locationIndex"] = (((playerInfo[player]["locationIndex"] + directionValue) % LOCATION_IDS.length) + LOCATION_IDS.length) % LOCATION_IDS.length;
     updatePips();
 }
-
-// function updateLocationColors() {
-//     resetToDefaultColors();
-
-//     setLocationColorBasedOnOccupancy();
-
-//     LOCATION_IDS.forEach(locationId => {
-//         var counter = 0;
-//         Object.keys(playerInfo).forEach(player => {
-//             if (LOCATION_IDS[playerInfo[player]["locationIndex"]] == locationId) {
-//                 counter++;
-//             }
-//         })
-//         if (counter > 1) {
-//             $(locationId).css('background-color', MULTIPLE_PLAYER_OCCUPIED_LOCATION_COLOR)
-//         }
-//     })
-// }
 
 function updatePips() {
     resetPips();

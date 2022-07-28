@@ -9,7 +9,15 @@ body {
    background: rgb(36, 83, 44);
    position: relative;
    margin: 25px 25px 25px 50px;
-   display: block;
+   display: inline-block;
+}
+
+#valley-map {
+   width: 501px;
+   height: 501px;
+   position: relative;
+   display: inline-block;
+   margin-bottom: 50px;
 }
 
 .location {
@@ -54,7 +62,7 @@ td {
 .mountain {
    width: 300px;
    height: 300px;
-   position: relative;
+   position: absolute;
    transform: rotate(38deg) translate(125px) rotate(-37.5deg);
 }
 
