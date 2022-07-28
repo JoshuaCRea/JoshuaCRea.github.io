@@ -1,5 +1,4 @@
 const LOCATION_IDS = ["#Leap-Creek", "#roadLCBS", "#Blackstone", "#roadBSFM", "#Fangmarsh", "#roadFMUC", "#Underclaw", "#roadUCP", "#Pouch", "#roadPLC"];
-const MULTIPLE_PLAYER_OCCUPIED_LOCATION_COLOR = '#fff700';
 const UNOCCUPIED_LOCATION_COLOR = 'rgb(165, 143, 106)';
 const CW_DIR_VALUE = 1
 const CCW_DIR_VALUE = -1
@@ -108,61 +107,7 @@ function updateTownInfo() {
     })
 }
 function resetPips() {
-    $("#lc-uninjured-pip-0").css("visibility", "hidden");
-    $("#lc-uninjured-pip-1").css("visibility", "hidden");
-    $("#lc-uninjured-pip-2").css("visibility", "hidden");
-    $("#lc-uninjured-pip-3").css("visibility", "hidden");
-    $("#lc-uninjured-pip-mtn").css("visibility", "hidden");
-    $("#lc-uninjured-pip-4").css("visibility", "hidden");
-    $("#lc-uninjured-pip-5").css("visibility", "hidden");
-    $("#lc-uninjured-pip-6").css("visibility", "hidden");
-    $("#lc-uninjured-pip-7").css("visibility", "hidden");
-    $("#lc-uninjured-pip-8").css("visibility", "hidden");
-    $("#lc-uninjured-pip-9").css("visibility", "hidden");
-    $("#bs-uninjured-pip-0").css("visibility", "hidden");
-    $("#bs-uninjured-pip-1").css("visibility", "hidden");
-    $("#bs-uninjured-pip-2").css("visibility", "hidden");
-    $("#bs-uninjured-pip-3").css("visibility", "hidden");
-    $("#bs-uninjured-pip-mtn").css("visibility", "hidden");
-    $("#bs-uninjured-pip-4").css("visibility", "hidden");
-    $("#bs-uninjured-pip-5").css("visibility", "hidden");
-    $("#bs-uninjured-pip-6").css("visibility", "hidden");
-    $("#bs-uninjured-pip-7").css("visibility", "hidden");
-    $("#bs-uninjured-pip-8").css("visibility", "hidden");
-    $("#bs-uninjured-pip-9").css("visibility", "hidden");
-    $("#fm-uninjured-pip-0").css("visibility", "hidden");
-    $("#fm-uninjured-pip-1").css("visibility", "hidden");
-    $("#fm-uninjured-pip-2").css("visibility", "hidden");
-    $("#fm-uninjured-pip-3").css("visibility", "hidden");
-    $("#fm-uninjured-pip-mtn").css("visibility", "hidden");
-    $("#fm-uninjured-pip-4").css("visibility", "hidden");
-    $("#fm-uninjured-pip-5").css("visibility", "hidden");
-    $("#fm-uninjured-pip-6").css("visibility", "hidden");
-    $("#fm-uninjured-pip-7").css("visibility", "hidden");
-    $("#fm-uninjured-pip-8").css("visibility", "hidden");
-    $("#fm-uninjured-pip-9").css("visibility", "hidden");
-    $("#uc-uninjured-pip-0").css("visibility", "hidden");
-    $("#uc-uninjured-pip-1").css("visibility", "hidden");
-    $("#uc-uninjured-pip-2").css("visibility", "hidden");
-    $("#uc-uninjured-pip-3").css("visibility", "hidden");
-    $("#uc-uninjured-pip-mtn").css("visibility", "hidden");
-    $("#uc-uninjured-pip-4").css("visibility", "hidden");
-    $("#uc-uninjured-pip-5").css("visibility", "hidden");
-    $("#uc-uninjured-pip-6").css("visibility", "hidden");
-    $("#uc-uninjured-pip-7").css("visibility", "hidden");
-    $("#uc-uninjured-pip-8").css("visibility", "hidden");
-    $("#uc-uninjured-pip-9").css("visibility", "hidden");
-    $("#p-uninjured-pip-0").css("visibility", "hidden");
-    $("#p-uninjured-pip-1").css("visibility", "hidden");
-    $("#p-uninjured-pip-2").css("visibility", "hidden");
-    $("#p-uninjured-pip-3").css("visibility", "hidden");
-    $("#p-uninjured-pip-mtn").css("visibility", "hidden");
-    $("#p-uninjured-pip-4").css("visibility", "hidden");
-    $("#p-uninjured-pip-5").css("visibility", "hidden");
-    $("#p-uninjured-pip-6").css("visibility", "hidden");
-    $("#p-uninjured-pip-7").css("visibility", "hidden");
-    $("#p-uninjured-pip-8").css("visibility", "hidden");
-    $("#p-uninjured-pip-9").css("visibility", "hidden");
+    $(".pip").css("visibility", "hidden");
 }
 
 $("#p1MoveCwButton").click(function () { updateLocationIndex(CW_DIR_VALUE, "p1"); })

@@ -3,8 +3,8 @@ body {
 }
 
 .map {
-   width: 601px;
-   height: 601px;
+   width: 301px;
+   height: 301px;
    border-radius: 50%;
    background: hsla(130, 39%, 23%, 0);
    position: relative;
@@ -67,162 +67,114 @@ td {
    transform: rotate(38deg) translate(125px) rotate(-37.5deg);
 }
 
-.leapcreek {
+#Leap-Creek {
    transform: translate(251px);
 }
 
-.lc-pip-overlay {
-   width: 100px;
-   height: 100px;
-   display: inline-block;
-   position: relative;
-   position: absolute;
-   top: 49%;
-   left: 49%;
-   margin: -51px;
-   visibility: hidden;
-}
-
-#lc-uninjured-pip-0 {visibility: hidden;}
-#lc-uninjured-pip-1 {visibility: hidden;}
-#lc-uninjured-pip-2 {visibility: hidden;}
-#lc-uninjured-pip-3 {visibility: hidden;}
-#lc-uninjured-pip-mtn {visibility: hidden;}
-#lc-uninjured-pip-4 {visibility: hidden;}
-#lc-uninjured-pip-5 {visibility: hidden;}
-#lc-uninjured-pip-6 {visibility: hidden;}
-#lc-uninjured-pip-7 {visibility: hidden;}
-#lc-uninjured-pip-8 {visibility: hidden;}
-#lc-uninjured-pip-9 {visibility: hidden;}
-
-.bs-pip-overlay {
-   width: 100px;
-   height: 100px;
-   display: inline-block;
-   position: relative;
-   position: absolute;
-   top: 47%;
-   left: 50%;
-   margin: -51px;
-}
-
-#bs-uninjured-pip-0 {visibility: hidden;}
-#bs-uninjured-pip-1 {visibility: hidden;}
-#bs-uninjured-pip-2 {visibility: hidden;}
-#bs-uninjured-pip-3 {visibility: hidden;}
-#bs-uninjured-pip-mtn {visibility: hidden;}
-#bs-uninjured-pip-4 {visibility: hidden;}
-#bs-uninjured-pip-5 {visibility: hidden;}
-#bs-uninjured-pip-6 {visibility: hidden;}
-#bs-uninjured-pip-7 {visibility: hidden;}
-#bs-uninjured-pip-8 {visibility: hidden;}
-#bs-uninjured-pip-9 {visibility: hidden;}
-
-.fm-pip-overlay {
-   width: 100px;
-   height: 100px;
-   display: inline-block;
-   position: relative;
-   position: absolute;
-   top: 46%;
-   left: 51%;
-   margin: -51px;
-}
-
-#fm-uninjured-pip-0 {visibility: hidden;}
-#fm-uninjured-pip-1 {visibility: hidden;}
-#fm-uninjured-pip-2 {visibility: hidden;}
-#fm-uninjured-pip-3 {visibility: hidden;}
-#fm-uninjured-pip-mtn {visibility: hidden;}
-#fm-uninjured-pip-4 {visibility: hidden;}
-#fm-uninjured-pip-5 {visibility: hidden;}
-#fm-uninjured-pip-6 {visibility: hidden;}
-#fm-uninjured-pip-7 {visibility: hidden;}
-#fm-uninjured-pip-8 {visibility: hidden;}
-#fm-uninjured-pip-9 {visibility: hidden;}
-
-.uc-pip-overlay {
-   width: 100px;
-   height: 100px;
-   display: inline-block;
-   position: relative;
-   position: absolute;
-   top: 49%;
-   left: 53%;
-   margin: -51px;
-}
-
-#uc-uninjured-pip-0 {visibility: hidden;}
-#uc-uninjured-pip-1 {visibility: hidden;}
-#uc-uninjured-pip-2 {visibility: hidden;}
-#uc-uninjured-pip-3 {visibility: hidden;}
-#uc-uninjured-pip-mtn {visibility: hidden;}
-#uc-uninjured-pip-4 {visibility: hidden;}
-#uc-uninjured-pip-5 {visibility: hidden;}
-#uc-uninjured-pip-6 {visibility: hidden;}
-#uc-uninjured-pip-7 {visibility: hidden;}
-#uc-uninjured-pip-8 {visibility: hidden;}
-#uc-uninjured-pip-9 {visibility: hidden;}
-
-.p-pip-overlay {
-   width: 100px;
-   height: 100px;
-   display: inline-block;
-   position: relative;
-   position: absolute;
-   top: 49%;
-   left: 51%;
-   margin: -51px;
-}
-
-#p-uninjured-pip-0 {visibility: hidden;}
-#p-uninjured-pip-1 {visibility: hidden;}
-#p-uninjured-pip-2 {visibility: hidden;}
-#p-uninjured-pip-3 {visibility: hidden;}
-#p-uninjured-pip-mtn {visibility: hidden;}
-#p-uninjured-pip-4 {visibility: hidden;}
-#p-uninjured-pip-5 {visibility: hidden;}
-#p-uninjured-pip-6 {visibility: hidden;}
-#p-uninjured-pip-7 {visibility: hidden;}
-#p-uninjured-pip-8 {visibility: hidden;}
-#p-uninjured-pip-9 {visibility: hidden;}
-
-
-.roadLCBS {
-   transform: rotate(38deg) translate(277px) rotate(-36deg);
-}
-
-.blackstone {
+#Blackstone {
    transform: rotate(72deg) translate(251px) rotate(-72deg);
 }
 
-.roadBSFM {
-   transform: rotate(108deg) translate(265px) rotate(-108deg);
-}
-
-.fangmarsh {
+#Fangmarsh {
    transform: rotate(144deg) translate(251px) rotate(-144deg);
 }
 
-.roadFMUC {
-   transform: rotate(180deg) translate(228px) rotate(-180deg);
-}
-
-.underclaw {
+#Underclaw {
    transform: rotate(216deg) translate(251px) rotate(-216deg);
 }
 
-.roadUCP {
-   transform: rotate(252deg) translate(218px) rotate(-252deg);
-}
-
-.pouch {
+#Pouch {
    transform: rotate(288deg) translate(251px) rotate(-288deg);
 }
 
-.roadPLC {
+#roadLCBS {
+   transform: rotate(38deg) translate(277px) rotate(-36deg);
+}
+
+#roadBSFM {
+   transform: rotate(108deg) translate(265px) rotate(-108deg);
+}
+
+#roadFMUC {
+   transform: rotate(180deg) translate(228px) rotate(-180deg);
+}
+
+#roadUCP {
+   transform: rotate(252deg) translate(218px) rotate(-252deg);
+}
+
+#roadPLC {
    transform: rotate(324deg) translate(255px) rotate(-324deg);
 }
+
+.pip {
+   width: 100px;
+   height: 100px;
+   display: inline-block;
+   position: relative;
+   position: absolute;
+   margin: -51px;
+}
+
+#lc-uninjured-pip-0 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-1 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-2 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-3 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-mtn {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-4 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-5 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-6 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-7 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-8 {visibility: hidden; top: 49%; left: 49%;}
+#lc-uninjured-pip-9 {visibility: hidden; top: 49%; left: 49%;}
+
+#bs-uninjured-pip-0 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-1 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-2 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-3 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-mtn {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-4 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-5 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-6 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-7 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-8 {visibility: hidden; top: 47%; left: 50%;}
+#bs-uninjured-pip-9 {visibility: hidden; top: 47%; left: 50%;}
+
+#fm-uninjured-pip-0 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-1 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-2 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-3 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-mtn {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-4 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-5 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-6 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-7 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-8 {visibility: hidden; top: 46%; left: 51%;}
+#fm-uninjured-pip-9 {visibility: hidden; top: 46%; left: 51%;}
+
+#uc-uninjured-pip-0 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-1 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-2 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-3 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-mtn {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-4 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-5 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-6 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-7 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-8 {visibility: hidden; top: 49%; left: 53%;}
+#uc-uninjured-pip-9 {visibility: hidden; top: 49%; left: 53%;}
+
+#p-uninjured-pip-0 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-1 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-2 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-3 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-mtn {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-4 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-5 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-6 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-7 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-8 {visibility: hidden; top: 49%; left: 51%;}
+#p-uninjured-pip-9 {visibility: hidden; top: 49%; left: 51%;}
 
 .title {
    font-family: 'Berkshire Swash', cursive;
