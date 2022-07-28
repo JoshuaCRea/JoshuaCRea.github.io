@@ -62,6 +62,122 @@ td {
    transform: translate(251px);
 }
 
+.lc-pip-overlay {
+   width: 100px;
+   height: 100px;
+   display: inline-block;
+   position: relative;
+   position: absolute;
+   top: 49%;
+   left: 49%;
+   margin: -51px;
+}
+
+#lc-uninjured-pip-0 {visibility: visible;}
+#lc-uninjured-pip-1 {visibility: visible;}
+#lc-uninjured-pip-2 {visibility: hidden;}
+#lc-uninjured-pip-3 {visibility: hidden;}
+#lc-uninjured-pip-mtn {visibility: hidden;}
+#lc-uninjured-pip-4 {visibility: hidden;}
+#lc-uninjured-pip-5 {visibility: hidden;}
+#lc-uninjured-pip-6 {visibility: hidden;}
+#lc-uninjured-pip-7 {visibility: hidden;}
+#lc-uninjured-pip-8 {visibility: hidden;}
+#lc-uninjured-pip-9 {visibility: hidden;}
+
+.bs-pip-overlay {
+   width: 100px;
+   height: 100px;
+   display: inline-block;
+   position: relative;
+   position: absolute;
+   top: 47%;
+   left: 50%;
+   margin: -51px;
+}
+
+#bs-uninjured-pip-0 {visibility: visible;}
+#bs-uninjured-pip-1 {visibility: visible;}
+#bs-uninjured-pip-2 {visibility: hidden;}
+#bs-uninjured-pip-3 {visibility: hidden;}
+#bs-uninjured-pip-mtn {visibility: hidden;}
+#bs-uninjured-pip-4 {visibility: hidden;}
+#bs-uninjured-pip-5 {visibility: hidden;}
+#bs-uninjured-pip-6 {visibility: hidden;}
+#bs-uninjured-pip-7 {visibility: hidden;}
+#bs-uninjured-pip-8 {visibility: hidden;}
+#bs-uninjured-pip-9 {visibility: hidden;}
+
+.fm-pip-overlay {
+   width: 100px;
+   height: 100px;
+   display: inline-block;
+   position: relative;
+   position: absolute;
+   top: 46%;
+   left: 51%;
+   margin: -51px;
+}
+
+#fm-uninjured-pip-0 {visibility: visible;}
+#fm-uninjured-pip-1 {visibility: visible;}
+#fm-uninjured-pip-2 {visibility: hidden;}
+#fm-uninjured-pip-3 {visibility: hidden;}
+#fm-uninjured-pip-mtn {visibility: hidden;}
+#fm-uninjured-pip-4 {visibility: hidden;}
+#fm-uninjured-pip-5 {visibility: hidden;}
+#fm-uninjured-pip-6 {visibility: hidden;}
+#fm-uninjured-pip-7 {visibility: hidden;}
+#fm-uninjured-pip-8 {visibility: hidden;}
+#fm-uninjured-pip-9 {visibility: hidden;}
+
+.uc-pip-overlay {
+   width: 100px;
+   height: 100px;
+   display: inline-block;
+   position: relative;
+   position: absolute;
+   top: 49%;
+   left: 53%;
+   margin: -51px;
+}
+
+#uc-uninjured-pip-0 {visibility: visible;}
+#uc-uninjured-pip-1 {visibility: visible;}
+#uc-uninjured-pip-2 {visibility: hidden;}
+#uc-uninjured-pip-3 {visibility: hidden;}
+#uc-uninjured-pip-mtn {visibility: hidden;}
+#uc-uninjured-pip-4 {visibility: hidden;}
+#uc-uninjured-pip-5 {visibility: hidden;}
+#uc-uninjured-pip-6 {visibility: hidden;}
+#uc-uninjured-pip-7 {visibility: hidden;}
+#uc-uninjured-pip-8 {visibility: hidden;}
+#uc-uninjured-pip-9 {visibility: hidden;}
+
+.p-pip-overlay {
+   width: 100px;
+   height: 100px;
+   display: inline-block;
+   position: relative;
+   position: absolute;
+   top: 49%;
+   left: 51%;
+   margin: -51px;
+}
+
+#p-uninjured-pip-0 {visibility: visible;}
+#p-uninjured-pip-1 {visibility: visible;}
+#p-uninjured-pip-2 {visibility: hidden;}
+#p-uninjured-pip-3 {visibility: hidden;}
+#p-uninjured-pip-mtn {visibility: hidden;}
+#p-uninjured-pip-4 {visibility: hidden;}
+#p-uninjured-pip-5 {visibility: hidden;}
+#p-uninjured-pip-6 {visibility: hidden;}
+#p-uninjured-pip-7 {visibility: hidden;}
+#p-uninjured-pip-8 {visibility: hidden;}
+#p-uninjured-pip-9 {visibility: hidden;}
+
+
 .roadLCBS {
    transform: rotate(38deg) translate(277px) rotate(-36deg);
 }

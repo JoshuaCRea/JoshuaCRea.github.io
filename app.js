@@ -32,6 +32,8 @@ var playerInfo = {
         "locationIndex": 0,
         "townInfoId": "#p1TownInfo",
         "townSchoolId": "#p1TownSchool",
+        "uninjured-pip": "https://ucarecdn.com/49ffa57b-e1c0-4056-9274-19d5310c6cb8/LC_U.png",
+        "injured-pip": "https://ucarecdn.com/56cfe13f-8af4-40f5-9c8c-d6cc391ddeab/LC_I.png",
     },
     "p2": {
         "color": "gray",
@@ -46,49 +48,69 @@ var playerInfo = {
         "locationIndex": 4,
         "townInfoId": "#p3TownInfo",
         "townSchoolId": "#p3TownSchool",
+        "uninjured-pip": "https://ucarecdn.com/75e57c34-19d3-4ef2-91b3-1cada752a016/FM_U.png",
+        "injured-pip": "https://ucarecdn.com/897fcf02-6221-43c5-9f3d-afc5c5ffa9e1/FM_.png",
     },
     "p4": {
         "color": "green",
         "locationIndex": 6,
         "townInfoId": "#p4TownInfo",
         "townSchoolId": "#p4TownSchool",
+        "uninjured-pip": "https://ucarecdn.com/1d425a95-52ea-4263-8561-cdc489daf6c2/UC_U.png",
+        "injured-pip": "https://ucarecdn.com/48fb1241-13d4-49cf-b4c8-78102c143cb0/UC_I.png",
     },
     "p5": {
         "color": "blueviolet",
         "locationIndex": 8,
         "townInfoId": "#p5TownInfo",
         "townSchoolId": "#p5TownSchool",
+        "uninjured-pip": "https://ucarecdn.com/3139c200-5857-4cfc-8bb0-6aea73d5bb8e/P_U.png",
+        "injured-pip": "https://ucarecdn.com/59148b6f-0ffc-4b30-a9ab-abd2a098d194/P_I.png",
     },
 }
 
 onPageLoad()
 
 function onPageLoad() {
-    setLocationColorBasedOnOccupancy();
+    // setLocationColorBasedOnOccupancy();
     updateTownInfo();
+    updatePips();
+    console.log(playerInfo["p1"]["locationIndex"])
 }
 
 function updateLocationIndex(directionValue, player) {
     playerInfo[player]["locationIndex"] = (((playerInfo[player]["locationIndex"] + directionValue) % LOCATION_IDS.length) + LOCATION_IDS.length) % LOCATION_IDS.length;
-    updateLocationColors();
-    updateTownInfo();
 }
 
-function updateLocationColors() {
-    resetToDefaultColors();
+// function updateLocationColors() {
+//     resetToDefaultColors();
 
-    setLocationColorBasedOnOccupancy();
+//     setLocationColorBasedOnOccupancy();
 
+//     LOCATION_IDS.forEach(locationId => {
+//         var counter = 0;
+//         Object.keys(playerInfo).forEach(player => {
+//             if (LOCATION_IDS[playerInfo[player]["locationIndex"]] == locationId) {
+//                 counter++;
+//             }
+//         })
+//         if (counter > 1) {
+//             $(locationId).css('background-color', MULTIPLE_PLAYER_OCCUPIED_LOCATION_COLOR)
+//         }
+//     })
+// }
+
+function updatePips() {
     LOCATION_IDS.forEach(locationId => {
-        var counter = 0;
         Object.keys(playerInfo).forEach(player => {
             if (LOCATION_IDS[playerInfo[player]["locationIndex"]] == locationId) {
-                counter++;
+                $(locationId.overlay).html(playerInfo[player]["uninjured-pip"])
+                console.log(locationId.overlay)
             }
         })
-        if (counter > 1) {
-            $(locationId).css('background-color', MULTIPLE_PLAYER_OCCUPIED_LOCATION_COLOR)
-        }
+    //     if (counter > 1) {
+    //         $(locationId).css('background-color', MULTIPLE_PLAYER_OCCUPIED_LOCATION_COLOR)
+    //     }
     })
 }
 
@@ -108,15 +130,15 @@ function updateTownInfo() {
     })
 }
 
-function resetToDefaultColors() {
-    $(".town").css('background-color', UNOCCUPIED_LOCATION_COLOR);
-    $(".road").css('background-color', UNOCCUPIED_LOCATION_COLOR);
-}
+// function resetToDefaultColors() {
+//     $(".town").css('background-color', UNOCCUPIED_LOCATION_COLOR);
+//     $(".road").css('background-color', UNOCCUPIED_LOCATION_COLOR);
+// }
 
-function setLocationColorBasedOnOccupancy() {
-    Object.keys(playerInfo).forEach(player =>
-        $(LOCATION_IDS[playerInfo[player]["locationIndex"]]).css('background-color', playerInfo[player]["color"]))
-}
+// function setLocationColorBasedOnOccupancy() {
+//     Object.keys(playerInfo).forEach(player =>
+//         $(LOCATION_IDS[playerInfo[player]["locationIndex"]]).css('background-color', playerInfo[player]["color"]))
+// }
 
 $("#p1MoveCwButton").click(function () { updateLocationIndex(CW_DIR_VALUE, "p1"); })
 $("#p1MoveCcwButton").click(function () { updateLocationIndex(CCW_DIR_VALUE, "p1"); })
