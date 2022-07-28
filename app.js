@@ -32,7 +32,7 @@ var playerInfo = {
         "locationIndex": 0,
         "townInfoId": "#p1TownInfo",
         "townSchoolId": "#p1TownSchool",
-        "uninjured-pip": "https://ucarecdn.com/49ffa57b-e1c0-4056-9274-19d5310c6cb8/LC_U.png",
+        "abbr": "lc",
         "injured-pip": "https://ucarecdn.com/56cfe13f-8af4-40f5-9c8c-d6cc391ddeab/LC_I.png",
     },
     "p2": {
@@ -40,7 +40,7 @@ var playerInfo = {
         "locationIndex": 2,
         "townInfoId": "#p2TownInfo",
         "townSchoolId": "#p2TownSchool",
-        "uninjured-pip": "https://ucarecdn.com/6eaaa1c1-65cf-4643-b467-2b38c500b3b5/",
+        "abbr": "bs",
         "injured-pip": "https://ucarecdn.com/2c4827a8-7afd-4097-abe7-9ba774939f7c/",
     },
     "p3": {
@@ -48,7 +48,7 @@ var playerInfo = {
         "locationIndex": 4,
         "townInfoId": "#p3TownInfo",
         "townSchoolId": "#p3TownSchool",
-        "uninjured-pip": "https://ucarecdn.com/75e57c34-19d3-4ef2-91b3-1cada752a016/FM_U.png",
+        "abbr": "fm",       
         "injured-pip": "https://ucarecdn.com/897fcf02-6221-43c5-9f3d-afc5c5ffa9e1/FM_.png",
     },
     "p4": {
@@ -56,7 +56,7 @@ var playerInfo = {
         "locationIndex": 6,
         "townInfoId": "#p4TownInfo",
         "townSchoolId": "#p4TownSchool",
-        "uninjured-pip": "https://ucarecdn.com/1d425a95-52ea-4263-8561-cdc489daf6c2/UC_U.png",
+        "abbr": "uc",       
         "injured-pip": "https://ucarecdn.com/48fb1241-13d4-49cf-b4c8-78102c143cb0/UC_I.png",
     },
     "p5": {
@@ -64,7 +64,7 @@ var playerInfo = {
         "locationIndex": 8,
         "townInfoId": "#p5TownInfo",
         "townSchoolId": "#p5TownSchool",
-        "uninjured-pip": "https://ucarecdn.com/3139c200-5857-4cfc-8bb0-6aea73d5bb8e/P_U.png",
+        "abbr": "p",       
         "injured-pip": "https://ucarecdn.com/59148b6f-0ffc-4b30-a9ab-abd2a098d194/P_I.png",
     },
 }
@@ -72,14 +72,14 @@ var playerInfo = {
 onPageLoad()
 
 function onPageLoad() {
-    // setLocationColorBasedOnOccupancy();
     updateTownInfo();
+    resetPips();
     updatePips();
-    console.log(playerInfo["p1"]["locationIndex"])
 }
 
 function updateLocationIndex(directionValue, player) {
     playerInfo[player]["locationIndex"] = (((playerInfo[player]["locationIndex"] + directionValue) % LOCATION_IDS.length) + LOCATION_IDS.length) % LOCATION_IDS.length;
+    updatePips();
 }
 
 // function updateLocationColors() {
@@ -101,16 +101,12 @@ function updateLocationIndex(directionValue, player) {
 // }
 
 function updatePips() {
-    LOCATION_IDS.forEach(locationId => {
-        Object.keys(playerInfo).forEach(player => {
-            if (LOCATION_IDS[playerInfo[player]["locationIndex"]] == locationId) {
-                $(locationId.overlay).html(playerInfo[player]["uninjured-pip"])
-                console.log(locationId.overlay)
-            }
-        })
-    //     if (counter > 1) {
-    //         $(locationId).css('background-color', MULTIPLE_PLAYER_OCCUPIED_LOCATION_COLOR)
-    //     }
+    resetPips();
+    const playerKeys = Object.keys(playerInfo)
+    playerKeys.forEach(player => {
+        var playerLocationId = playerInfo[player]["abbr"]
+        var pipId = playerLocationId.concat("-uninjured-pip-", (playerInfo[player]["locationIndex"]))
+            $(`#${pipId}`).css("visibility", "visible")
     })
 }
 
@@ -129,16 +125,63 @@ function updateTownInfo() {
         $(playerInfo[player]["townSchoolId"]).html(locationSchoolName)
     })
 }
-
-// function resetToDefaultColors() {
-//     $(".town").css('background-color', UNOCCUPIED_LOCATION_COLOR);
-//     $(".road").css('background-color', UNOCCUPIED_LOCATION_COLOR);
-// }
-
-// function setLocationColorBasedOnOccupancy() {
-//     Object.keys(playerInfo).forEach(player =>
-//         $(LOCATION_IDS[playerInfo[player]["locationIndex"]]).css('background-color', playerInfo[player]["color"]))
-// }
+function resetPips() {
+    $("#lc-uninjured-pip-0").css("visibility", "hidden");
+    $("#lc-uninjured-pip-1").css("visibility", "hidden");
+    $("#lc-uninjured-pip-2").css("visibility", "hidden");
+    $("#lc-uninjured-pip-3").css("visibility", "hidden");
+    $("#lc-uninjured-pip-mtn").css("visibility", "hidden");
+    $("#lc-uninjured-pip-4").css("visibility", "hidden");
+    $("#lc-uninjured-pip-5").css("visibility", "hidden");
+    $("#lc-uninjured-pip-6").css("visibility", "hidden");
+    $("#lc-uninjured-pip-7").css("visibility", "hidden");
+    $("#lc-uninjured-pip-8").css("visibility", "hidden");
+    $("#lc-uninjured-pip-9").css("visibility", "hidden");
+    $("#bs-uninjured-pip-0").css("visibility", "hidden");
+    $("#bs-uninjured-pip-1").css("visibility", "hidden");
+    $("#bs-uninjured-pip-2").css("visibility", "hidden");
+    $("#bs-uninjured-pip-3").css("visibility", "hidden");
+    $("#bs-uninjured-pip-mtn").css("visibility", "hidden");
+    $("#bs-uninjured-pip-4").css("visibility", "hidden");
+    $("#bs-uninjured-pip-5").css("visibility", "hidden");
+    $("#bs-uninjured-pip-6").css("visibility", "hidden");
+    $("#bs-uninjured-pip-7").css("visibility", "hidden");
+    $("#bs-uninjured-pip-8").css("visibility", "hidden");
+    $("#bs-uninjured-pip-9").css("visibility", "hidden");
+    $("#fm-uninjured-pip-0").css("visibility", "hidden");
+    $("#fm-uninjured-pip-1").css("visibility", "hidden");
+    $("#fm-uninjured-pip-2").css("visibility", "hidden");
+    $("#fm-uninjured-pip-3").css("visibility", "hidden");
+    $("#fm-uninjured-pip-mtn").css("visibility", "hidden");
+    $("#fm-uninjured-pip-4").css("visibility", "hidden");
+    $("#fm-uninjured-pip-5").css("visibility", "hidden");
+    $("#fm-uninjured-pip-6").css("visibility", "hidden");
+    $("#fm-uninjured-pip-7").css("visibility", "hidden");
+    $("#fm-uninjured-pip-8").css("visibility", "hidden");
+    $("#fm-uninjured-pip-9").css("visibility", "hidden");
+    $("#uc-uninjured-pip-0").css("visibility", "hidden");
+    $("#uc-uninjured-pip-1").css("visibility", "hidden");
+    $("#uc-uninjured-pip-2").css("visibility", "hidden");
+    $("#uc-uninjured-pip-3").css("visibility", "hidden");
+    $("#uc-uninjured-pip-mtn").css("visibility", "hidden");
+    $("#uc-uninjured-pip-4").css("visibility", "hidden");
+    $("#uc-uninjured-pip-5").css("visibility", "hidden");
+    $("#uc-uninjured-pip-6").css("visibility", "hidden");
+    $("#uc-uninjured-pip-7").css("visibility", "hidden");
+    $("#uc-uninjured-pip-8").css("visibility", "hidden");
+    $("#uc-uninjured-pip-9").css("visibility", "hidden");
+    $("#p-uninjured-pip-0").css("visibility", "hidden");
+    $("#p-uninjured-pip-1").css("visibility", "hidden");
+    $("#p-uninjured-pip-2").css("visibility", "hidden");
+    $("#p-uninjured-pip-3").css("visibility", "hidden");
+    $("#p-uninjured-pip-mtn").css("visibility", "hidden");
+    $("#p-uninjured-pip-4").css("visibility", "hidden");
+    $("#p-uninjured-pip-5").css("visibility", "hidden");
+    $("#p-uninjured-pip-6").css("visibility", "hidden");
+    $("#p-uninjured-pip-7").css("visibility", "hidden");
+    $("#p-uninjured-pip-8").css("visibility", "hidden");
+    $("#p-uninjured-pip-9").css("visibility", "hidden");
+}
 
 $("#p1MoveCwButton").click(function () { updateLocationIndex(CW_DIR_VALUE, "p1"); })
 $("#p1MoveCcwButton").click(function () { updateLocationIndex(CCW_DIR_VALUE, "p1"); })

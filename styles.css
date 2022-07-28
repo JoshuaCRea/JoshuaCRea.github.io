@@ -8,7 +8,7 @@ body {
    border-radius: 50%;
    background: rgb(36, 83, 44);
    position: relative;
-   margin: auto;
+   margin: 25px 25px 25px 50px;
    display: block;
 }
 
@@ -71,10 +71,11 @@ td {
    top: 49%;
    left: 49%;
    margin: -51px;
+   visibility: hidden;
 }
 
-#lc-uninjured-pip-0 {visibility: visible;}
-#lc-uninjured-pip-1 {visibility: visible;}
+#lc-uninjured-pip-0 {visibility: hidden;}
+#lc-uninjured-pip-1 {visibility: hidden;}
 #lc-uninjured-pip-2 {visibility: hidden;}
 #lc-uninjured-pip-3 {visibility: hidden;}
 #lc-uninjured-pip-mtn {visibility: hidden;}
@@ -96,8 +97,8 @@ td {
    margin: -51px;
 }
 
-#bs-uninjured-pip-0 {visibility: visible;}
-#bs-uninjured-pip-1 {visibility: visible;}
+#bs-uninjured-pip-0 {visibility: hidden;}
+#bs-uninjured-pip-1 {visibility: hidden;}
 #bs-uninjured-pip-2 {visibility: hidden;}
 #bs-uninjured-pip-3 {visibility: hidden;}
 #bs-uninjured-pip-mtn {visibility: hidden;}
@@ -119,8 +120,8 @@ td {
    margin: -51px;
 }
 
-#fm-uninjured-pip-0 {visibility: visible;}
-#fm-uninjured-pip-1 {visibility: visible;}
+#fm-uninjured-pip-0 {visibility: hidden;}
+#fm-uninjured-pip-1 {visibility: hidden;}
 #fm-uninjured-pip-2 {visibility: hidden;}
 #fm-uninjured-pip-3 {visibility: hidden;}
 #fm-uninjured-pip-mtn {visibility: hidden;}
@@ -142,8 +143,8 @@ td {
    margin: -51px;
 }
 
-#uc-uninjured-pip-0 {visibility: visible;}
-#uc-uninjured-pip-1 {visibility: visible;}
+#uc-uninjured-pip-0 {visibility: hidden;}
+#uc-uninjured-pip-1 {visibility: hidden;}
 #uc-uninjured-pip-2 {visibility: hidden;}
 #uc-uninjured-pip-3 {visibility: hidden;}
 #uc-uninjured-pip-mtn {visibility: hidden;}
@@ -165,8 +166,8 @@ td {
    margin: -51px;
 }
 
-#p-uninjured-pip-0 {visibility: visible;}
-#p-uninjured-pip-1 {visibility: visible;}
+#p-uninjured-pip-0 {visibility: hidden;}
+#p-uninjured-pip-1 {visibility: hidden;}
 #p-uninjured-pip-2 {visibility: hidden;}
 #p-uninjured-pip-3 {visibility: hidden;}
 #p-uninjured-pip-mtn {visibility: hidden;}
