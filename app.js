@@ -95,13 +95,6 @@ function updateTownInfo() {
     Object.keys(playerInfo).forEach(player => {
         var playerLocationId = LOCATION_IDS[playerInfo[player]["locationIndex"]]
         var townInfo = TOWN_DESCRIPTIONS[playerLocationId]
-        // if (townInfo == undefined) {
-        //     var locationDescription = "The Valley of the Star";
-        //     var locationSchoolName = "Wilderness";
-        // } else {
-        //     var locationDescription = TOWN_DESCRIPTIONS[playerLocationId]["Nickname"]
-        //     var locationSchoolName = TOWN_DESCRIPTIONS[playerLocationId]["School name"]
-        // }
         const locationDescription = townInfo ? townInfo["Nickname"] : "The Valley of the Star";
         const locationSchoolName = townInfo ? townInfo["School name"] : "Wilderness"; 
         $(playerInfo[player]["townInfoId"]).html(locationDescription)
