@@ -1,0 +1,844 @@
+body {
+   background-color: #D3DEDC;
+}
+
+.map {
+   width: 301px;
+   height: 301px;
+   border-radius: 50%;
+   background: hsla(130, 39%, 23%, 0);
+   position: relative;
+   margin: 25px 25px 25px 50px;
+   display: inline-block;
+}
+
+#valley-map {
+   width: 601px;
+   height: 601px;
+   position: relative;
+   display: inline-block;
+   margin-bottom: 50px;
+}
+
+.location {
+   display: block;
+   position: absolute;
+  top: 51%;
+   left: 51%;
+   margin: -51px;
+   background: rgb(165, 143, 106);
+   border-radius: 51%;
+   text-align: center;
+}
+
+.overlay {
+   position: absolute;
+   width: 100px;
+   height: 100px;
+}
+
+.road {
+   width: 50px;
+   height: 50px;
+   line-height: 50px;
+}
+
+table,
+th,
+td {
+   margin: 75px auto auto auto;
+   font-family: 'Crimson Text', serif;
+   font-size: 20px;
+   left: 0px;
+
+}
+
+.town {
+   width: 100px;
+   height: 100px;
+   line-height: 100px;
+}
+
+.mountain {
+   width: 300px;
+   height: 300px;
+   position: absolute;
+   display: inline-block;
+   transform: rotate(38deg) translate(125px) rotate(-37.5deg);
+}
+
+#Leap-Creek {
+   transform: translate(251px);
+}
+
+#Blackstone {
+   transform: rotate(72deg) translate(251px) rotate(-72deg);
+}
+
+#Fangmarsh {
+   transform: rotate(144deg) translate(251px) rotate(-144deg);
+}
+
+#Underclaw {
+   transform: rotate(216deg) translate(251px) rotate(-216deg);
+}
+
+#Pouch {
+   transform: rotate(288deg) translate(251px) rotate(-288deg);
+}
+
+#roadLCBS {
+   transform: rotate(38deg) translate(277px) rotate(-36deg);
+}
+
+#roadBSFM {
+   transform: rotate(108deg) translate(265px) rotate(-108deg);
+}
+
+#roadFMUC {
+   transform: rotate(180deg) translate(228px) rotate(-180deg);
+}
+
+#roadUCP {
+   transform: rotate(252deg) translate(218px) rotate(-252deg);
+}
+
+#roadPLC {
+   transform: rotate(324deg) translate(255px) rotate(-324deg);
+}
+
+.pip {
+   width: 100px;
+   height: 100px;
+   display: inline-block;
+   position: relative;
+   position: absolute;
+   margin: -51px;
+   visibility: hidden;
+}
+
+.pip-lc {top: 49%; left: 49%;}
+.pip-bs {top: 47%; left: 50%;}
+.pip-fm {top: 46%; left: 51%;}
+.pip-uc {top: 49%; left: 53%;}
+.pip-p {top: 49%; left: 51%;}
+
+.title {
+   font-family: 'Berkshire Swash', cursive;
+   text-align: center;
+   margin-bottom: 60px;
+   font-size: 300%;
+   color: #7C99AC;
+}
+
+.btn {
+   -webkit-border-radius: 28;
+   -moz-border-radius: 28;
+   border-radius: 28px;
+   font-family: 'Crimson Text', serif;
+   color: #ffffff;
+   font-size: 20px;
+   padding: 10px 20px 10px 20px;
+   text-decoration: none;
+   text-align: center;
+}
+
+#p1MoveCwButton {
+   background: #3498db;
+   background-image: -webkit-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: -moz-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: -ms-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: -o-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: linear-gradient(to bottom, #4bb7fa, #3498db);
+}
+
+#p1MoveCwButton:hover {
+   background: #7eb9de;
+   background-image: -webkit-linear-gradient(top, #a8dcff, #7eb9de);
+   background-image: -moz-linear-gradient(top, #a8dcff,  #7eb9de);
+   background-image: -ms-linear-gradient(top, #a8dcff, #7eb9de);
+   background-image: -o-linear-gradient(top, #a8dcff, #7eb9de);
+   background-image: linear-gradient(to bottom, #a8dcff, #7eb9de);
+}
+
+#p1MoveCcwButton {
+   background: #3498db;
+   background-image: -webkit-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: -moz-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: -ms-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: -o-linear-gradient(top, #4bb7fa, #3498db);
+   background-image: linear-gradient(to bottom, #4bb7fa, #3498db);
+}
+
+#p1MoveCcwButton:hover {
+   background: #7eb9de;
+   background-image: -webkit-linear-gradient(top, #a8dcff, #7eb9de);
+   background-image: -moz-linear-gradient(top, #a8dcff,  #7eb9de);
+   background-image: -ms-linear-gradient(top, #a8dcff, #7eb9de);
+   background-image: -o-linear-gradient(top, #a8dcff, #7eb9de);
+   background-image: linear-gradient(to bottom, #a8dcff, #7eb9de);
+}
+
+#p2MoveCwButton {
+   background: #000000;
+   background-image: -webkit-linear-gradient(top, #7d7d7d, #000000);
+   background-image: -moz-linear-gradient(top, #7d7d7d,#000000);
+   background-image: -ms-linear-gradient(top, #7d7d7d, #000000);
+   background-image: -o-linear-gradient(top, #7d7d7d, #000000);
+   background-image: linear-gradient(to bottom, #7d7d7d, #000000);
+ }
+ 
+#p2MoveCwButton:hover {
+   background: #919191;
+   background-image: -webkit-linear-gradient(top, #dedede, #919191);
+   background-image: -moz-linear-gradient(top, #dedede, #919191);
+   background-image: -ms-linear-gradient(top, #dedede, #919191);
+   background-image: -o-linear-gradient(top, #dedede, #919191);
+   background-image: linear-gradient(to bottom, #dedede, #919191);
+ }
+
+#p2MoveCcwButton {
+   background: #000000;
+   background-image: -webkit-linear-gradient(top, #7d7d7d, #000000);
+   background-image: -moz-linear-gradient(top, #7d7d7d,#000000);
+   background-image: -ms-linear-gradient(top, #7d7d7d, #000000);
+   background-image: -o-linear-gradient(top, #7d7d7d, #000000);
+   background-image: linear-gradient(to bottom, #7d7d7d, #000000);
+ }
+ 
+ #p2MoveCcwButton:hover {
+   background: #919191;
+   background-image: -webkit-linear-gradient(top, #dedede, #919191);
+   background-image: -moz-linear-gradient(top, #dedede, #919191);
+   background-image: -ms-linear-gradient(top, #dedede, #919191);
+   background-image: -o-linear-gradient(top, #dedede, #919191);
+   background-image: linear-gradient(to bottom, #dedede, #919191);
+   text-decoration: none;
+   text-align: center;
+ }
+
+ #p3MoveCwButton {
+   background: #ff0000;
+   background-image: -webkit-linear-gradient(top, #ff0000, #a10000);
+   background-image: -moz-linear-gradient(top, #ff0000, #a10000);
+   background-image: -ms-linear-gradient(top, #ff0000, #a10000);
+   background-image: -o-linear-gradient(top, #ff0000, #a10000);
+   background-image: linear-gradient(to bottom, #ff0000, #a10000);
+ }
+ 
+ #p3MoveCwButton:hover {
+   background: #ffabab;
+   background-image: -webkit-linear-gradient(top, #ffabab, #ff5454);
+   background-image: -moz-linear-gradient(top, #ffabab, #ff5454);
+   background-image: -ms-linear-gradient(top, #ffabab, #ff5454);
+   background-image: -o-linear-gradient(top, #ffabab, #ff5454);
+   background-image: linear-gradient(to bottom, #ffabab, #ff5454);
+ }
+
+ #p3MoveCcwButton {
+   background: #ff0000;
+   background-image: -webkit-linear-gradient(top, #ff0000, #a10000);
+   background-image: -moz-linear-gradient(top, #ff0000, #a10000);
+   background-image: -ms-linear-gradient(top, #ff0000, #a10000);
+   background-image: -o-linear-gradient(top, #ff0000, #a10000);
+   background-image: linear-gradient(to bottom, #ff0000, #a10000);
+ }
+ 
+ #p3MoveCcwButton:hover {
+   background: #ffabab;
+   background-image: -webkit-linear-gradient(top, #ffabab, #ff5454);
+   background-image: -moz-linear-gradient(top, #ffabab, #ff5454);
+   background-image: -ms-linear-gradient(top, #ffabab, #ff5454);75
+   background-image: -o-linear-gradient(top, #ffabab, #ff5454);
+   background-image: linear-gradient(to bottom, #ffabab, #ff5454);
+ }
+
+ #p4MoveCwButton {
+   background: #4fed3d;
+   background-image: -webkit-linear-gradient(top, #13a403, #145700);
+   background-image: -moz-linear-gradient(top, #13a403, #145700);
+   background-image: -ms-linear-gradient(top, #13a403, #145700);
+   background-image: -o-linear-gradient(top, #13a403, #145700);
+   background-image: linear-gradient(to bottom, #13a403, #145700);
+ }
+ 
+ #p4MoveCwButton:hover {
+   background: #c6f7c6;
+   background-image: -webkit-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: -moz-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: -ms-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: -o-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: linear-gradient(to bottom, #c6f7c6, #8cc771);
+ }
+
+ #p4MoveCcwButton {
+   background: #4fed3d;
+   background-image: -webkit-linear-gradient(top, #13a403, #145700);
+   background-image: -moz-linear-gradient(top, #13a403, #145700);
+   background-image: -ms-linear-gradient(top, #13a403, #145700);
+   background-image: -o-linear-gradient(top, #13a403, #145700);
+   background-image: linear-gradient(to bottom, #13a403, #145700);
+ }
+ 
+ #p4MoveCcwButton:hover {
+   background: #c6f7c6;
+   background-image: -webkit-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: -moz-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: -ms-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: -o-linear-gradient(top, #c6f7c6, #8cc771);
+   background-image: linear-gradient(to bottom, #c6f7c6, #8cc771);
+ }
+
+ #p5MoveCwButton {
+   background: #7d60e8;
+   background-image: -webkit-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: -moz-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: -ms-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: -o-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: linear-gradient(to bottom, #7d60e8, #5136a3);
+ }
+ 
+ #p5MoveCwButton:hover {
+   background: #cebcf7;
+   background-image: -webkit-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: -moz-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: -ms-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: -o-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: linear-gradient(to bottom, #cebcf7, #9678fa);
+ }
+
+ #p5MoveCcwButton {
+   background: #7d60e8;
+   background-image: -webkit-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: -moz-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: -ms-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: -o-linear-gradient(top, #7d60e8, #5136a3);
+   background-image: linear-gradient(to bottom, #7d60e8, #5136a3);
+ }
+ 
+ #p5MoveCcwButton:hover {
+   background: #cebcf7;
+   background-image: -webkit-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: -moz-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: -ms-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: -o-linear-gradient(top, #cebcf7, #9678fa);
+   background-image: linear-gradient(to bottom, #cebcf7, #9678fa);
+ }
+
+.practice-page {
+   --practice-bg: #0c111b;
+   --practice-panel: rgba(13, 23, 38, 0.8);
+   --practice-panel-strong: rgba(18, 30, 48, 0.92);
+   --practice-border: rgba(182, 150, 92, 0.28);
+   --practice-text: #f7f2e7;
+   --practice-muted: #b7c3d3;
+   --practice-gold: #d7b372;
+   --practice-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+   margin: 0;
+   min-height: 100vh;
+   background:
+      radial-gradient(circle at top, rgba(77, 125, 176, 0.28), transparent 34%),
+      radial-gradient(circle at bottom left, rgba(185, 114, 73, 0.2), transparent 26%),
+      linear-gradient(145deg, #111725 0%, #090d14 58%, #1a1210 100%);
+   color: var(--practice-text);
+   font-family: 'Manrope', sans-serif;
+}
+
+.practice-shell {
+   width: min(1320px, calc(100% - 32px));
+   margin: 0 auto;
+   padding: 48px 0 64px;
+}
+
+.practice-hero {
+   margin-bottom: 32px;
+}
+
+.practice-kicker,
+.practice-turn-label,
+.practice-stat-label {
+   text-transform: uppercase;
+   letter-spacing: 0.18em;
+   font-size: 0.72rem;
+   color: var(--practice-gold);
+}
+
+.practice-hero h1,
+.practice-turn-card h2,
+.practice-sidebar h2,
+.practice-log-card h3,
+.practice-effect-card h3,
+.practice-roster-card h3,
+.practice-centerpiece strong {
+   font-family: 'Cinzel', serif;
+}
+
+.practice-hero h1 {
+   margin: 8px 0 12px;
+   font-size: clamp(3rem, 6vw, 5.6rem);
+   line-height: 0.95;
+}
+
+.practice-intro {
+   width: min(700px, 100%);
+   margin: 0;
+   font-size: 1.05rem;
+   line-height: 1.7;
+   color: var(--practice-muted);
+}
+
+.practice-layout {
+   display: grid;
+   grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.9fr);
+   gap: 24px;
+   align-items: start;
+}
+
+.practice-board-panel,
+.practice-sidebar {
+   background: var(--practice-panel);
+   border: 1px solid var(--practice-border);
+   border-radius: 28px;
+   box-shadow: var(--practice-shadow);
+   backdrop-filter: blur(18px);
+}
+
+.practice-board-panel {
+   padding: 28px;
+}
+
+.practice-sidebar {
+   padding: 24px;
+}
+
+.practice-board {
+   position: relative;
+   width: min(100%, 760px);
+   aspect-ratio: 1;
+   margin: 0 auto 28px;
+   border-radius: 50%;
+   background:
+      radial-gradient(circle, rgba(210, 179, 114, 0.18) 0, rgba(210, 179, 114, 0.05) 24%, transparent 25%),
+      radial-gradient(circle, rgba(110, 163, 223, 0.18) 0, transparent 58%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+   border: 1px solid rgba(215, 179, 114, 0.16);
+   overflow: hidden;
+}
+
+.practice-board::after {
+   content: "";
+   position: absolute;
+   inset: 11%;
+   border-radius: 50%;
+   border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.practice-board-glow {
+   position: absolute;
+   inset: 18%;
+   border-radius: 50%;
+   background: radial-gradient(circle, rgba(215, 179, 114, 0.22), transparent 66%);
+   filter: blur(4px);
+}
+
+.practice-node {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   width: 118px;
+   height: 118px;
+   transform:
+      rotate(var(--angle))
+      translateY(-290px)
+      rotate(calc(var(--angle) * -1))
+      translate(-50%, -50%);
+   display: grid;
+   place-items: center;
+   text-align: center;
+}
+
+.practice-node-core {
+   width: 100%;
+   min-height: 82px;
+   padding: 18px 14px;
+   border-radius: 22px;
+   border: 1px solid rgba(255, 255, 255, 0.14);
+   background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)),
+      linear-gradient(135deg, var(--node-color), rgba(8, 14, 22, 0.96));
+   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+   display: grid;
+   place-items: center;
+   font-size: 0.94rem;
+   line-height: 1.25;
+}
+
+.practice-node-road .practice-node-core {
+   min-height: 66px;
+   border-radius: 999px;
+   font-size: 0.83rem;
+}
+
+.practice-node-occupants {
+   position: absolute;
+   bottom: -12px;
+   display: inline-flex;
+   gap: 6px;
+   padding: 6px 10px;
+   border-radius: 999px;
+   background: rgba(8, 14, 22, 0.74);
+   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.practice-occupant,
+.practice-roster-dot {
+   width: 12px;
+   height: 12px;
+   border-radius: 50%;
+   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.16);
+}
+
+.practice-centerpiece {
+   position: absolute;
+   inset: 50%;
+   width: 220px;
+   height: 220px;
+   margin: -110px 0 0 -110px;
+   border-radius: 50%;
+   border: 1px solid rgba(255, 255, 255, 0.16);
+   background:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.2), transparent 38%),
+      linear-gradient(180deg, rgba(202, 154, 76, 0.38), rgba(41, 29, 19, 0.92));
+   display: grid;
+   place-items: center;
+   text-align: center;
+   padding: 24px;
+   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.25);
+}
+
+.practice-center-label {
+   display: block;
+   margin-bottom: 10px;
+   text-transform: uppercase;
+   letter-spacing: 0.22em;
+   font-size: 0.7rem;
+   color: rgba(255, 255, 255, 0.72);
+}
+
+.practice-controls {
+   display: grid;
+   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr);
+   gap: 18px;
+}
+
+.practice-turn-card,
+.practice-log-card,
+.practice-roster-card,
+.practice-effect-card {
+   background: var(--practice-panel-strong);
+   border: 1px solid rgba(255, 255, 255, 0.08);
+   border-radius: 22px;
+   padding: 20px;
+}
+
+.practice-turn-copy,
+.practice-roster-copy,
+.practice-log,
+.practice-effect-card p,
+.practice-roster-location {
+   color: var(--practice-muted);
+}
+
+.practice-action-row {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 12px;
+   margin-top: 16px;
+}
+
+.practice-button {
+   border: 0;
+   border-radius: 999px;
+   padding: 13px 18px;
+   font: inherit;
+   font-weight: 700;
+   color: var(--practice-text);
+   background: rgba(255, 255, 255, 0.08);
+   cursor: pointer;
+   transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.practice-button:hover:not(:disabled) {
+   transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.14);
+}
+
+.practice-button:disabled {
+   opacity: 0.45;
+   cursor: not-allowed;
+}
+
+.practice-button-primary {
+   background: linear-gradient(135deg, #d7b372, #ab6a3f);
+   color: #11161f;
+}
+
+.practice-button-secondary {
+   background: linear-gradient(135deg, rgba(83, 121, 163, 0.82), rgba(60, 84, 116, 0.82));
+}
+
+.practice-turn-meta,
+.practice-roster-stats {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+   gap: 10px;
+   margin-top: 18px;
+}
+
+.practice-roster-stats {
+   grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.practice-stat-pill {
+   padding: 12px;
+   border-radius: 16px;
+   background: rgba(255, 255, 255, 0.05);
+   border: 1px solid rgba(255, 255, 255, 0.06);
+   text-align: center;
+}
+
+.practice-stat-pill strong {
+   display: block;
+   margin-top: 6px;
+   font-size: 1.05rem;
+   text-align: center;
+}
+
+.practice-roster-stats .practice-stat-pill {
+   min-width: 0;
+   padding: 10px 6px;
+}
+
+.practice-roster-stats .practice-stat-label {
+   display: block;
+   text-align: center;
+   letter-spacing: 0.12em;
+   font-size: 0.62rem;
+}
+
+.practice-roster-bar-wrap {
+   margin-top: 12px;
+}
+
+.practice-roster-bar-label {
+   margin: 0;
+   text-align: center;
+   text-transform: uppercase;
+   letter-spacing: 0.14em;
+   font-size: 0.68rem;
+   color: var(--practice-gold);
+}
+
+.practice-roster-bar-indicator {
+   position: relative;
+   padding-bottom: 12px;
+}
+
+.practice-roster-bar-pointer {
+   position: absolute;
+   bottom: 0;
+   left: calc(((var(--reputation-position) - 0.5) / 5) * 100%);
+   transform: translateX(-50%);
+   width: 0;
+   height: 0;
+   border-left: 7px solid transparent;
+   border-right: 7px solid transparent;
+   border-bottom: 10px solid rgba(255, 255, 255, 0.96);
+   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.practice-roster-bar {
+   display: grid;
+   grid-template-columns: repeat(5, minmax(0, 1fr));
+   gap: 6px;
+   padding: 6px;
+   border: 1px solid rgba(255, 255, 255, 0.9);
+   border-radius: 999px;
+}
+
+.practice-roster-bar-segment {
+   display: block;
+   height: 10px;
+   border-radius: 999px;
+   border: 1px solid rgba(255, 255, 255, 0.08);
+   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+.practice-roster-bar-segment.is-black {
+   background: linear-gradient(180deg, #5a5a5a, #111111);
+   border-color: rgba(255, 255, 255, 0.38);
+   box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.22),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.practice-roster-bar-segment.is-brown {
+   background: linear-gradient(180deg, #8a5a2b, #5f3816);
+}
+
+.practice-roster-bar-segment.is-gold {
+   background: linear-gradient(180deg, #f0d17a, #b98c2f);
+}
+
+.practice-log {
+   margin: 14px 0 0;
+   padding-left: 18px;
+   line-height: 1.6;
+}
+
+.practice-sidebar h2 {
+   margin: 8px 0 14px;
+   font-size: 1.35rem;
+}
+
+.practice-roster-card {
+   margin-bottom: 14px;
+   border-left: 4px solid var(--accent);
+}
+
+.practice-roster-card.is-active {
+   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 18px 36px rgba(0, 0, 0, 0.2);
+}
+
+.practice-roster-card.is-winner {
+   background:
+      linear-gradient(135deg, rgba(215, 179, 114, 0.24), rgba(215, 179, 114, 0.08)),
+      var(--practice-panel-strong);
+}
+
+.practice-roster-top,
+.practice-roster-title {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+}
+
+.practice-roster-title {
+   justify-content: flex-start;
+}
+
+.practice-turn-badge {
+   padding: 6px 10px;
+   border-radius: 999px;
+   background: rgba(215, 179, 114, 0.16);
+   color: var(--practice-gold);
+   font-size: 0.82rem;
+}
+
+.practice-effects-grid {
+   display: grid;
+   gap: 12px;
+}
+
+.practice-effect-card {
+   border-top: 3px solid var(--accent);
+}
+
+@media (max-width: 1100px) {
+   .practice-layout {
+      grid-template-columns: 1fr;
+   }
+}
+
+@media (max-width: 860px) {
+   .practice-shell {
+      width: min(100% - 20px, 1320px);
+      padding-top: 24px;
+   }
+
+   .practice-board-panel,
+   .practice-sidebar {
+      padding: 16px;
+      border-radius: 22px;
+   }
+
+   .practice-board {
+      aspect-ratio: auto;
+      min-height: 640px;
+   }
+
+   .practice-node {
+      width: 92px;
+      height: 92px;
+      transform:
+         rotate(var(--angle))
+         translateY(-250px)
+         rotate(calc(var(--angle) * -1))
+         translate(-50%, -50%);
+   }
+
+   .practice-node-core {
+      min-height: 70px;
+      padding: 12px 10px;
+      font-size: 0.82rem;
+   }
+
+   .practice-node-road .practice-node-core {
+      min-height: 54px;
+      font-size: 0.75rem;
+   }
+
+   .practice-centerpiece {
+      width: 170px;
+      height: 170px;
+      margin: -85px 0 0 -85px;
+      padding: 18px;
+   }
+
+   .practice-controls {
+      grid-template-columns: 1fr;
+   }
+}
+
+@media (max-width: 560px) {
+   .practice-board {
+      min-height: 520px;
+   }
+
+   .practice-node {
+      width: 74px;
+      height: 74px;
+      transform:
+         rotate(var(--angle))
+         translateY(-205px)
+         rotate(calc(var(--angle) * -1))
+         translate(-50%, -50%);
+   }
+
+   .practice-node-core {
+      min-height: 58px;
+      padding: 10px 8px;
+      font-size: 0.68rem;
+   }
+
+   .practice-node-road .practice-node-core {
+      min-height: 46px;
+      font-size: 0.63rem;
+   }
+
+   .practice-node-occupants {
+      gap: 4px;
+      padding: 4px 8px;
+   }
+
+   .practice-centerpiece {
+      width: 136px;
+      height: 136px;
+      margin: -68px 0 0 -68px;
+   }
+
+   .practice-centerpiece strong {
+      font-size: 0.92rem;
+   }
+}
