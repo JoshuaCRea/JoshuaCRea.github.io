@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Combat Reference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Julius+Sans+One&family=Lugrasimo&family=Major+Mono+Display&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0d1422;
@@ -189,6 +192,156 @@
             line-height: 1.5;
         }
 
+        .reference-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 196px);
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .reference-mini-card {
+            border: 3px solid rgba(35, 26, 13, 0.82);
+            border-radius: 10px;
+            background:
+                radial-gradient(circle at 70% 20%, rgba(255, 244, 194, 0.55), transparent 32%),
+                linear-gradient(180deg, #c1a76f, #8f7344);
+            color: #241c10;
+            padding: 0 14px 14px;
+            display: grid;
+            gap: 10px;
+            min-height: 250px;
+            width: 196px;
+            overflow: hidden;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+        }
+
+        .reference-mini-card.is-special {
+            box-shadow:
+                0 10px 22px rgba(0, 0, 0, 0.18),
+                0 0 0 1px rgba(215, 179, 114, 0.55);
+        }
+
+        .reference-mini-header {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: -8px;
+            width: 100%;
+            max-width: 156px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .reference-mini-array {
+            display: grid;
+            gap: 6px;
+            flex: 1 1 0;
+        }
+
+        .reference-mini-array:last-child {
+            justify-items: start;
+        }
+
+        .reference-mini-slots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .reference-mini-slot {
+            width: 24px;
+            height: 30px;
+            border-radius: 4px;
+            display: grid;
+            place-items: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            opacity: 0.28;
+            border: 1px solid rgba(0, 0, 0, 0.35);
+        }
+
+        .reference-mini-slot.attack {
+            background: rgba(206, 88, 79, 0.35);
+        }
+
+        .reference-mini-slot.attack.is-filled {
+            background: #ce584f;
+            opacity: 1;
+        }
+
+        .reference-mini-slot.defense {
+            background: rgba(22, 22, 22, 0.35);
+            color: #f4f7fb;
+        }
+
+        .reference-mini-slot.defense.is-filled {
+            background: #161616;
+            opacity: 1;
+        }
+
+        .reference-mini-body {
+            display: grid;
+            gap: 6px;
+            align-content: start;
+            text-align: center;
+            width: 100%;
+            max-width: 156px;
+            margin: 0 auto;
+        }
+
+        .reference-mini-name {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .reference-mini-modes {
+            display: grid;
+            gap: 6px;
+            margin-top: auto;
+            width: 100%;
+            max-width: 156px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .reference-mini-mode {
+            border: 1px solid rgba(31, 23, 12, 0.34);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 7px 10px;
+            text-align: center;
+            font-size: 0.69rem;
+            line-height: 1.3;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .reference-mini-mode strong {
+            display: block;
+        }
+
+        .reference-mini-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .reference-mini-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(31, 23, 12, 0.55);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .reference-mini-dot.attack.is-filled {
+            background: #ce584f;
+        }
+
+        .reference-mini-dot.defense.is-filled {
+            background: #161616;
+        }
+
         .modes {
             display: grid;
             gap: 10px;
@@ -310,121 +463,23 @@
                         <li><strong>School Special</strong>: use the fighter keyword on that clash. Cost: 1 Form Point.</li>
                         <li><strong>Swap Attack</strong>: replace the printed attack lane with the card's swap lane. Cost: 1 Form Point.</li>
                         <li><strong>Swap Defense</strong>: replace the printed defense lane with the card's swap lane. Cost: 1 Form Point.</li>
-                        <li>The special 10th card always has its keyword active, then may still pay for one swap.</li>
+                        <li>The special 10th card matches the live app: keyword active for 0 cost, or pay 1 Form Point for one swap.</li>
                     </ul>
                 </section>
 
                 <section class="section">
                     <p class="label">All Five Decks</p>
-                    <div class="deck-gallery">
-                        <div class="deck-sheet">
-                            <h3>Leap-Creek</h3>
-                            <p>Keyword: Reversal. Special card: Whirlpool Turn.</p>
-                            <div class="deck-grid">
-                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Whirlpool Turn</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
-                            </div>
-                        </div>
-                        <div class="deck-sheet">
-                            <h3>Fangmarsh</h3>
-                            <p>Keyword: Flurry. Special card: Mantis Burst.</p>
-                            <div class="deck-grid">
-                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Mantis Burst</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
-                            </div>
-                        </div>
-                        <div class="deck-sheet">
-                            <h3>Blackstone</h3>
-                            <p>Keyword: Endure. Special card: Stone Heart.</p>
-                            <div class="deck-grid">
-                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Stone Heart</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
-                            </div>
-                        </div>
-                        <div class="deck-sheet">
-                            <h3>Underclaw</h3>
-                            <p>Keyword: Overwhelm. Special card: Iron Torrent.</p>
-                            <div class="deck-grid">
-                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Iron Torrent</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
-                            </div>
-                        </div>
-                        <div class="deck-sheet">
-                            <h3>Pouch</h3>
-                            <p>Keyword: Stumble. Special card: Tipsy Spiral.</p>
-                            <div class="deck-grid">
-                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
-                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
-                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
-                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
-                                <div class="deck-card"><strong>Tipsy Spiral</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="deck-gallery" class="deck-gallery"></div>
                 </section>
 
                 <section class="section">
                     <p class="label">Shared Pattern</p>
-                    <div class="deck-grid">
-                        <div class="deck-card"><strong>H / H</strong><p>Swap M</p></div>
-                        <div class="deck-card"><strong>H / M</strong><p>Swap L</p></div>
-                        <div class="deck-card"><strong>H / L</strong><p>Swap M</p></div>
-                        <div class="deck-card"><strong>M / H</strong><p>Swap L</p></div>
-                        <div class="deck-card"><strong>M / M</strong><p>Swap H</p></div>
-                        <div class="deck-card"><strong>M / L</strong><p>Swap H</p></div>
-                        <div class="deck-card"><strong>L / H</strong><p>Swap M</p></div>
-                        <div class="deck-card"><strong>L / M</strong><p>Swap H</p></div>
-                        <div class="deck-card"><strong>L / L</strong><p>Swap M</p></div>
-                        <div class="deck-card"><strong>Special M / M</strong><p>Swap L<br>Keyword always on</p></div>
-                    </div>
+                    <div id="shared-pattern-grid" class="deck-grid"></div>
                 </section>
 
                 <section class="section">
                     <p class="label">Keywords</p>
-                    <ul>
-                        <li><strong>Reversal</strong>: each successful block also deals 1 Hit Point back to the attacker.</li>
-                        <li><strong>Flurry</strong>: the card gains a second distinct attack lane using its swap lane.</li>
-                        <li><strong>Endure</strong>: the card gains a second distinct defense lane using its swap lane.</li>
-                        <li><strong>Overwhelm</strong>: ignore the opponent's attack for that clash; it is skipped, not blocked.</li>
-                        <li><strong>Stumble</strong>: during Reaction, optionally replace the revealed card with a different random card.</li>
-                    </ul>
+                    <ul id="keywords-list"></ul>
                 </section>
 
                 <section class="section">
@@ -449,5 +504,132 @@
             </div>
         </section>
     </main>
+    <script>
+        const laneLabel = { high: "H", middle: "M", low: "L" };
+        const fighterStyleCopy = {
+            "Leap-Creek": { style: "Boundless Hand", keyword: "Reversal" },
+            Fangmarsh: { style: "Praying Mantis", keyword: "Flurry" },
+            Blackstone: { style: "Immense Fist", keyword: "Endure" },
+            Underclaw: { style: "Long Fist", keyword: "Overwhelm" },
+            Pouch: { style: "Drunken Fist", keyword: "Stumble" },
+        };
+        const keywordRules = {
+            Reversal: "Each successful block also deals 1 Hit Point back to the attacker.",
+            Flurry: "The card gains a second distinct attack lane using its swap lane.",
+            Endure: "The card gains a second distinct defense lane using its swap lane.",
+            Overwhelm: "Ignore the opponent's attack for that clash; it is skipped, not blocked.",
+            Stumble: "During Reaction, optionally replace the revealed card with a different random card.",
+        };
+        const baseCards = [
+            { id: "shared-hh", title: "High Wall", attack: "high", defense: "high", swapLane: "middle", isSpecial: false },
+            { id: "shared-hm", title: "Rising Split", attack: "high", defense: "middle", swapLane: "low", isSpecial: false },
+            { id: "shared-hl", title: "Sky Hook", attack: "high", defense: "low", swapLane: "middle", isSpecial: false },
+            { id: "shared-mh", title: "Center Break", attack: "middle", defense: "high", swapLane: "low", isSpecial: false },
+            { id: "shared-mm", title: "Mirror Gate", attack: "middle", defense: "middle", swapLane: "high", isSpecial: false },
+            { id: "shared-ml", title: "Cross Step", attack: "middle", defense: "low", swapLane: "high", isSpecial: false },
+            { id: "shared-lh", title: "Shin Sweep", attack: "low", defense: "high", swapLane: "middle", isSpecial: false },
+            { id: "shared-lm", title: "River Cut", attack: "low", defense: "middle", swapLane: "high", isSpecial: false },
+            { id: "shared-ll", title: "Rooted Hook", attack: "low", defense: "low", swapLane: "middle", isSpecial: false },
+        ];
+        const combatDeckLibrary = {
+            "Leap-Creek": baseCards.concat({ id: "special-mm-leap-creek", title: "Whirlpool Turn", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Fangmarsh: baseCards.concat({ id: "special-mm-fangmarsh", title: "Mantis Burst", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Blackstone: baseCards.concat({ id: "special-mm-blackstone", title: "Stone Heart", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Underclaw: baseCards.concat({ id: "special-mm-underclaw", title: "Iron Torrent", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Pouch: baseCards.concat({ id: "special-mm-pouch", title: "Tipsy Spiral", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+        };
+        const decks = Object.entries(fighterStyleCopy).map(([fighter, details]) => ({
+            fighter,
+            style: details.style,
+            keyword: details.keyword,
+            cards: combatDeckLibrary[fighter],
+            special: combatDeckLibrary[fighter][combatDeckLibrary[fighter].length - 1].title,
+        }));
+
+        function renderSlots(type, order, filledLane) {
+            return `
+                <div class="reference-mini-array">
+                    <div class="reference-mini-slots">
+                        ${order.map((lane) => `
+                            <div class="reference-mini-slot ${type}${lane === filledLane ? " is-filled" : ""}">
+                                ${laneLabel[lane]}
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDots(type, filledLane) {
+            return `
+                <div class="reference-mini-dots">
+                    ${["high", "middle", "low"].map((lane) => `
+                        <span class="reference-mini-dot ${type}${lane === filledLane ? " is-filled" : ""}"></span>
+                    `).join("")}
+                </div>
+            `;
+        }
+
+        function renderReferenceCard(card, keyword) {
+            const modes = card.isSpecial
+                ? [
+                    { kind: "text", label: keyword },
+                    { kind: "dots", type: "attack", lane: card.swapLane },
+                    { kind: "dots", type: "defense", lane: card.swapLane },
+                ]
+                : [
+                    { kind: "text", label: "Normal" },
+                    { kind: "text", label: keyword },
+                    { kind: "dots", type: "attack", lane: card.swapLane },
+                    { kind: "dots", type: "defense", lane: card.swapLane },
+                ];
+
+            return `
+                <article class="reference-mini-card${card.isSpecial ? " is-special" : ""}">
+                    <div class="reference-mini-header">
+                        ${renderSlots("attack", ["high", "middle", "low"], card.attack)}
+                        ${renderSlots("defense", ["low", "middle", "high"], card.defense)}
+                    </div>
+                    <div class="reference-mini-body">
+                        <div class="reference-mini-name">${card.title}</div>
+                    </div>
+                    <div class="reference-mini-modes">
+                        ${modes.map((mode) => `
+                            <div class="reference-mini-mode">
+                                ${mode.kind === "text" ? `<strong>${mode.label}</strong>` : renderDots(mode.type, mode.lane)}
+                            </div>
+                        `).join("")}
+                    </div>
+                </article>
+            `;
+        }
+
+        document.getElementById("deck-gallery").innerHTML = decks.map((deck) => `
+            <section class="deck-sheet">
+                <h3>${deck.fighter}</h3>
+                <p>Style: ${deck.style}. Keyword: ${deck.keyword}. Special card: ${deck.special}.</p>
+                <div class="reference-card-grid">
+                    ${deck.cards.map((card) => renderReferenceCard(card, deck.keyword)).join("")}
+                </div>
+            </section>
+        `).join("");
+
+        document.getElementById("shared-pattern-grid").innerHTML = baseCards.concat({
+            title: "Special M / M",
+            attack: "middle",
+            defense: "middle",
+            swapLane: "low",
+            isSpecial: true,
+        }).map((card) => `
+            <div class="deck-card">
+                <strong>${laneLabel[card.attack]} / ${laneLabel[card.defense]}</strong>
+                <p>Swap ${laneLabel[card.swapLane]}${card.isSpecial ? "<br>Keyword Always On" : ""}</p>
+            </div>
+        `).join("");
+
+        document.getElementById("keywords-list").innerHTML = Object.entries(keywordRules).map(([keyword, copy]) => `
+            <li><strong>${keyword}</strong>: ${copy}</li>
+        `).join("");
+    </script>
 </body>
 </html>

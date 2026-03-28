@@ -241,94 +241,6 @@ function buildCombatScore(player) {
     return player.power + player.stamina + player.agility + player.chi + player.wit + randomDie();
 }
 
-function applyTownEffect(player, school, location) {
-    let detail = `${player.name} trains in ${location.name}.`;
-
-    switch (location.id) {
-        case "#Leap-Creek":
-            changeStats(player, { agility: 1, chi: 1 });
-            detail += " Water-form training raises Agility and Chi.";
-            break;
-        case "#Blackstone":
-            changeStats(player, { power: 1, stamina: 1 });
-            detail += " Iron-body drills raise Power and Stamina.";
-            break;
-        case "#Fangmarsh":
-            changeStats(player, { power: 1, chi: 1, stamina: -1 });
-            detail += " Harsh marsh training raises Power and Chi, but costs 1 Stamina.";
-            break;
-        case "#Underclaw":
-            changeStats(player, { agility: 1, wit: 1 });
-            detail += " Shadow-footwork raises Agility and Wit.";
-            break;
-        case "#Pouch":
-            changeStats(player, { chi: 1, wit: 1 });
-            detail += " Drunken-boxing lessons raise Chi and Wit.";
-            break;
-        default:
-            break;
-    }
-
-    return detail;
-}
-
-function applyRoadEncounter(player, location) {
-    const roll = randomDie();
-    let detail = `${player.name} crosses ${location.name}.`;
-
-    switch (location.id) {
-        case "#roadLCBS":
-            if (roll >= 4) {
-                changeStats(player, { power: 1 });
-                detail += " Hauling stones through the ford raises Power.";
-            } else {
-                changeStats(player, { stamina: -1, chi: -1 });
-                detail += " Exhaustion and self-doubt cost 1 Stamina and 1 Chi.";
-            }
-            break;
-        case "#roadBSFM":
-            if (roll >= 5) {
-                changeStats(player, { wit: 1, agility: 1 });
-                detail += " Outsmarting a rival raises Wit and Agility.";
-            } else {
-                changeStats(player, { stamina: -1, chi: -1 });
-                detail += " A roadside beating costs 1 Stamina and 1 Chi.";
-            }
-            break;
-        case "#roadFMUC":
-            if (roll >= 4) {
-                changeStats(player, { chi: 1, wit: 1 });
-                detail += " A severe teacher raises Chi and Wit.";
-            } else {
-                changeStats(player, { chi: -1 });
-                detail += " Harsh criticism costs 1 Chi.";
-            }
-            break;
-        case "#roadUCP":
-            if (roll >= 4) {
-                changeStats(player, { agility: 1, stamina: 1 });
-                detail += " Moonlit running raises Agility and Stamina.";
-            } else {
-                changeStats(player, { power: -1 });
-                detail += " A bad fall costs 1 Power.";
-            }
-            break;
-        case "#roadPLC":
-            if (roll >= 5) {
-                changeStats(player, { power: 1, wit: 1 });
-                detail += " Driving off the Silver Wolf's agents raises Power and Wit.";
-            } else {
-                changeStats(player, { stamina: -1, chi: -1 });
-                detail += " The Silver Wolf's agents injure your body and confidence, costing 1 Stamina and 1 Chi.";
-            }
-            break;
-        default:
-            break;
-    }
-
-    return detail;
-}
-
 function resolveRivalFight(players, activeIndex, logEntries) {
     const activePlayer = players[activeIndex];
     const rivals = players.filter((player, index) => (
@@ -450,6 +362,10 @@ const FIGHTER_STYLE_COPY = {
 
 function FighterProfileCard({ player }) {
     const townCopy = getTownCopy(`#${player.name}`);
+    const currentMapLocation = TRACK_DETAILS[player.position] || null;
+    const locationStatus = currentMapLocation
+        ? (currentMapLocation.type === "town" ? `In ${currentMapLocation.name}` : "on the road.")
+        : "on the road.";
     const sigilSrc = getSchoolSigil(player.name);
     const healthStatus = player.alive ? (player.injured ? "injured" : "healthy") : "dead";
     const healthFaceSrc = getFighterStatusFace(healthStatus);
@@ -612,6 +528,12 @@ function FighterProfileCard({ player }) {
                     )
                 )
             )
+        ),
+        React.createElement(
+            "div",
+            { className: "practice-fighter-profile-location-section" },
+            React.createElement("p", { className: "practice-fighter-profile-section-label" }, "Currently you are:"),
+            React.createElement("p", { className: "practice-fighter-profile-location-copy" }, locationStatus)
         )
     );
 }
@@ -1371,6 +1293,7 @@ function PlayerCard({
     actionsRemaining,
     interactionsLocked,
     pendingRoll,
+    canTravel,
     schoolStatus,
     canRollFate,
     canFight,
@@ -1523,15 +1446,8 @@ function PlayerCard({
                                     className: `practice-player-action-button ${action.id === "counter-clockwise" ? "is-left-travel" : ""}`,
                                     type: "button",
                                     "aria-label": action.ariaLabel || action.label,
-                                    disabled: interactionsLocked,
-                                    onClick: () => {
-                                        if (pendingRoll === null) {
-                                            onRollFate();
-                                            return;
-                                        }
-
-                                        onTravel(action.id === "clockwise" ? CW_DIR_VALUE : CCW_DIR_VALUE);
-                                    },
+                                    disabled: interactionsLocked || !canTravel,
+                                    onClick: () => onTravel(action.id === "clockwise" ? CW_DIR_VALUE : CCW_DIR_VALUE),
                                 },
                                 React.createElement("span", {
                                     className: `practice-player-action-shape ${action.shapeClass} is-image-arrow`,
@@ -1584,12 +1500,15 @@ function PlayerCard({
                                 className: `practice-player-action-shape ${action.shapeClass}${isSaveSchoolAction ? " is-image-defend" : ""}${isRollFateAction ? " is-image-quest" : ""}${isHealAction ? " is-image-heal" : ""}`,
                                 "aria-hidden": "true",
                                 style: isSaveSchoolAction
-                                    ? { "--defend-icon": `url("${DEFEND_ICON}")`, backgroundImage: `url("${DEFEND_ICON}")` }
+                                    ? {
+                                        "--defend-icon": `url("${DEFEND_ICON}")`,
+                                        "--defend-fire-icon": `url("${FIRE_ICON}")`,
+                                    }
                                     : isHealAction
                                         ? { "--heal-icon": `url("${HEAL_ICON}")`, backgroundImage: `url("${HEAL_ICON}")` }
-                                    : isRollFateAction
-                                        ? { "--quest-icon": `url("${QUEST_ICON}")`, backgroundImage: `url("${QUEST_ICON}")` }
-                                        : undefined,
+                                        : isRollFateAction
+                                            ? { "--quest-icon": `url("${QUEST_ICON}")`, backgroundImage: `url("${QUEST_ICON}")` }
+                                            : undefined,
                             }),
                             React.createElement("span", { className: "practice-player-action-text" }, action.label)
                         ),
@@ -1800,6 +1719,7 @@ function PracticeGame() {
         currentPlayer?.alive
         && pendingRoll === null
     );
+    const currentPlayerCanTravel = Boolean(currentPlayer?.alive);
     const currentPlayerRivals = currentPlayer ? getRivalsAtPosition(players, currentPlayerIndex) : [];
     const currentPlayerCanFight = Boolean(
         currentPlayer?.alive
@@ -2579,31 +2499,17 @@ function PracticeGame() {
     }
 
     function travel(direction) {
-        if (winnerId || gameOverReason || pendingRoll === null || !currentPlayer?.alive || actionsRemaining < 1 || isResolvingAction) {
+        if (winnerId || gameOverReason || !currentPlayer?.alive || actionsRemaining < 1 || isResolvingAction) {
             return;
         }
 
-        const directionLabel = direction === CW_DIR_VALUE ? "sunwise" : "widdershins";
         const updatedPlayers = players.map((player) => ({ ...player }));
         const updatedSchools = schools.map((school) => ({ ...school }));
         const activePlayer = updatedPlayers[currentPlayerIndex];
-        const totalSteps = pendingRoll;
-        const logEntries = [];
-
-        activePlayer.position = normalizeIndex(activePlayer.position + (direction * totalSteps));
+        activePlayer.position = normalizeIndex(activePlayer.position + direction);
         activePlayer.arrivalOrder = nextArrivalOrder;
         setNextArrivalOrder(nextArrivalOrder + 1);
-
-        const landing = TRACK_DETAILS[activePlayer.position];
-
-        if (isTown(landing.id)) {
-            const school = getSchoolById(updatedSchools, landing.id);
-            logEntries.push(applyTownEffect(activePlayer, school, landing));
-        } else {
-            logEntries.push(applyRoadEncounter(activePlayer, landing));
-        }
-
-        finalizeAction(updatedPlayers, updatedSchools, logEntries);
+        finalizeAction(updatedPlayers, updatedSchools, []);
     }
 
     function challengeSilverWolf() {
@@ -2816,6 +2722,7 @@ function PracticeGame() {
                                     isWinner: winner ? winner.id === player.id : false,
                                     actionsRemaining,
                                     pendingRoll,
+                                    canTravel: currentPlayerIndex === playerIndex ? currentPlayerCanTravel : false,
                                     interactionsLocked: currentPlayerIndex === playerIndex ? (isResolvingAction || Boolean(combatState) || Boolean(challengeState)) : false,
                                     schoolStatus: getSchoolByName(schools, player.name)?.status || SCHOOL_STATUS_WHOLE,
                                     canRollFate: currentPlayerIndex === playerIndex ? currentPlayerCanRollFate : false,

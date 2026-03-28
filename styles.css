@@ -558,7 +558,7 @@ td {
    transform-origin: center;
    opacity: 0;
    pointer-events: none;
-   transition: transform 250ms ease, opacity 250ms ease;
+   transition: transform 500ms ease, opacity 500ms ease;
    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
@@ -966,6 +966,22 @@ td {
    gap: 8px;
 }
 
+.practice-fighter-profile-location-section {
+   width: min(100%, 34%);
+   min-width: 180px;
+   margin: 4px auto 0;
+   display: grid;
+   justify-items: center;
+   gap: 8px;
+   text-align: center;
+}
+
+.practice-fighter-profile-location-copy {
+   margin: 0;
+   color: var(--practice-muted);
+   line-height: 1.35;
+}
+
 .practice-form-points-row {
    display: flex;
    align-items: center;
@@ -1073,11 +1089,13 @@ td {
 .practice-roster-stack {
    display: grid;
    gap: 28px;
+   min-width: 0;
 }
 
 .practice-roster-item {
    will-change: transform;
    cursor: pointer;
+   min-width: 0;
 }
 
 .practice-roster-item.is-selected .practice-roster-card:not(.is-active) {
@@ -1090,16 +1108,20 @@ td {
    padding: 12px;
    border-radius: 18px;
    border-left: 4px solid var(--accent);
+   width: 100%;
+   max-width: 100%;
+   box-sizing: border-box;
    transform-origin: top center;
    transition: transform 1000ms ease, box-shadow 1000ms ease, padding 1000ms ease, min-height 1000ms ease;
 }
 
 .practice-roster-card.is-active {
-   padding: 30px;
-   min-height: 350px;
+   padding: 22px;
+   min-height: 332px;
    box-shadow:
-      0 0 0 2px rgba(255, 255, 255, 0.34),
-      0 0 48px rgba(255, 255, 255, 0.22),
+      0 0 0 2px rgba(255, 255, 255, 0.46),
+      0 0 64px rgba(133, 214, 255, 0.34),
+      0 0 24px rgba(255, 255, 255, 0.2),
       0 24px 44px rgba(0, 0, 0, 0.26);
 }
 
@@ -1320,12 +1342,16 @@ td {
    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
    gap: 6px;
    margin-top: 10px;
+   justify-items: center;
 }
 
 .practice-stat-pill {
    padding: 8px 9px;
    border-radius: 12px;
    min-height: 0;
+   width: 100%;
+   text-align: center;
+   justify-items: center;
 }
 
 .practice-stat-pill strong {
@@ -1395,12 +1421,14 @@ td {
 
 .practice-player-actions {
    display: grid;
-   grid-template-columns: repeat(5, 96px);
-   justify-content: center;
-   column-gap: 18px;
-   row-gap: 0;
+   grid-template-columns: repeat(5, minmax(0, 1fr));
+   justify-content: stretch;
+   column-gap: 10px;
+   row-gap: 8px;
    margin-top: 16px;
    align-items: start;
+   width: 100%;
+   min-width: 0;
 }
 
 .practice-player-action-group {
@@ -1408,7 +1436,7 @@ td {
    justify-items: center;
    align-content: start;
    gap: 4px;
-   width: 96px;
+   width: 100%;
    grid-template-rows: 38px auto;
    min-width: 0;
 }
@@ -1422,9 +1450,10 @@ td {
    grid-template-columns: repeat(2, minmax(0, 38px));
    align-items: center;
    justify-content: center;
-   gap: 12px;
+   gap: 8px;
    min-height: 38px;
-   width: 96px;
+   width: 100%;
+   min-width: 0;
 }
 
 .practice-player-action-button {
@@ -1434,7 +1463,7 @@ td {
    align-content: start;
    grid-template-rows: 38px auto;
    gap: 4px;
-   width: 96px;
+   width: 100%;
    min-width: 0;
    padding: 0;
    background: transparent;
@@ -1457,7 +1486,7 @@ td {
 .practice-player-action-button.is-save-school {
    grid-template-columns: minmax(0, 1fr) auto;
    align-items: center;
-   column-gap: 8px;
+   column-gap: 6px;
    margin-top: 10px;
 }
 
@@ -1467,10 +1496,6 @@ td {
    grid-template-rows: 38px auto;
    gap: 4px;
    width: 100%;
-}
-
-.practice-player-action-button.is-save-school.is-completing:disabled {
-   opacity: 1;
 }
 
 .practice-save-school-pips {
@@ -1507,10 +1532,6 @@ td {
    box-shadow: none;
 }
 
-.practice-player-action-button.is-left-travel .practice-player-action-shape.is-arrow-cw {
-   transform: rotate(90deg) scaleX(-1);
-}
-
 .practice-player-action-shape {
    display: block;
    width: 36px;
@@ -1525,7 +1546,7 @@ td {
    height: 26px;
    background-repeat: no-repeat;
    background-size: 100% 200%;
-   background-position: center top;
+   background-position: center bottom;
    box-shadow: none;
    filter: brightness(0) saturate(100%) invert(69%) sepia(40%) saturate(775%) hue-rotate(86deg) brightness(92%) contrast(89%);
    transform: rotate(90deg);
@@ -1536,10 +1557,10 @@ td {
    height: 26px;
    background-repeat: no-repeat;
    background-size: 100% 200%;
-   background-position: center bottom;
+   background-position: center top;
    box-shadow: none;
    filter: brightness(0) saturate(100%) invert(69%) sepia(40%) saturate(775%) hue-rotate(86deg) brightness(92%) contrast(89%);
-   transform: rotate(90deg);
+   transform: rotate(90deg) scaleX(-1);
 }
 
 .practice-player-action-shape.is-quest {
@@ -1583,11 +1604,37 @@ td {
 .practice-player-action-shape.is-defend {
    width: 38px;
    height: 38px;
+   background: none;
+   background-color: transparent;
+   box-shadow: none;
+   isolation: isolate;
+}
+
+.practice-player-action-shape.is-defend.is-image-defend::before {
+   content: "";
+   position: absolute;
+   left: calc(50% + 7px);
+   top: -13px;
+   width: 24px;
+   height: 24px;
+   transform: translateX(-50%);
+   background-image: var(--defend-fire-icon);
    background-repeat: no-repeat;
    background-size: contain;
    background-position: center;
-   background-color: transparent;
-   box-shadow: none;
+   z-index: 0;
+   filter: drop-shadow(0 1px 2px rgba(255, 157, 51, 0.35));
+}
+
+.practice-player-action-shape.is-defend.is-image-defend::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background-image: var(--defend-icon);
+   background-repeat: no-repeat;
+   background-size: contain;
+   background-position: center;
+   z-index: 1;
 }
 
 .practice-player-action-text {
@@ -1595,6 +1642,7 @@ td {
    line-height: 1.25;
    text-align: center;
    text-wrap: balance;
+   max-width: 100%;
 }
 
 .practice-effects-grid {
