@@ -89,6 +89,7 @@ function createInitialPlayers() {
         techniques: { black: 0, brown: 0, gold: 0 },
         hitPoints: 3,
         formPoints: 2,
+        bonusActionsNextTurn: 0,
         injured: false,
         arrivalOrder: index,
         alive: true,
@@ -163,7 +164,37 @@ function getAlivePlayers(players) {
 }
 
 function getActionsForPlayer(player) {
-    return player?.injured ? 1 : 2;
+    if (!player) {
+        return 0;
+    }
+
+    const baseActions = player.injured ? 1 : 2;
+    return baseActions + (player.bonusActionsNextTurn || 0);
+}
+
+function consumeNextTurnActionBonus(players, playerIndex) {
+    const player = players[playerIndex];
+
+    if (!player || !player.bonusActionsNextTurn) {
+        return {
+            players,
+            actions: getActionsForPlayer(player),
+        };
+    }
+
+    const updatedPlayers = players.map((entry, index) => (
+        index === playerIndex
+            ? {
+                ...entry,
+                bonusActionsNextTurn: 0,
+            }
+            : entry
+    ));
+
+    return {
+        players: updatedPlayers,
+        actions: getActionsForPlayer(player),
+    };
 }
 
 function getNextLivingIndex(players, currentIndex) {
@@ -659,11 +690,11 @@ function CombatantSummary({ fighter, toneClassName }) {
                 React.createElement("p", { className: "practice-combatant-resource-label" }, "Hit Points"),
                 React.createElement(
                     "div",
-                    { className: "practice-form-points-row", "aria-label": `Hit Points ${fighter.hitPoints ?? 0} of 6` },
-                    Array.from({ length: 6 }).map((_, index) =>
+                    { className: "practice-form-points-row", "aria-label": `Hit Points ${fighter.currentHitPoints ?? 0} of ${fighter.maxHitPoints ?? 0}` },
+                    Array.from({ length: fighter.maxHitPoints ?? 0 }).map((_, index) =>
                         React.createElement("span", {
                             key: `combat-hit-${fighter.id}-${index}`,
-                            className: `practice-form-point${index < (fighter.hitPoints ?? 0) ? " is-filled" : ""}`,
+                            className: `practice-form-point${index < (fighter.currentHitPoints ?? 0) ? " is-filled" : ""}`,
                             "aria-hidden": "true",
                         })
                     )
@@ -675,11 +706,11 @@ function CombatantSummary({ fighter, toneClassName }) {
                 React.createElement("p", { className: "practice-combatant-resource-label" }, "Form Points"),
                 React.createElement(
                     "div",
-                    { className: "practice-form-points-row", "aria-label": `Form Points ${fighter.formPoints ?? 0} of 5` },
-                    Array.from({ length: 5 }).map((_, index) =>
+                    { className: "practice-form-points-row", "aria-label": `Form Points ${fighter.currentFormPoints ?? 0} of ${fighter.maxFormPoints ?? 0}` },
+                    Array.from({ length: fighter.maxFormPoints ?? 0 }).map((_, index) =>
                         React.createElement("span", {
                             key: `combat-form-${fighter.id}-${index}`,
-                            className: `practice-form-point${index < (fighter.formPoints ?? 0) ? " is-filled" : ""}`,
+                            className: `practice-form-point${index < (fighter.currentFormPoints ?? 0) ? " is-filled" : ""}`,
                             "aria-hidden": "true",
                         })
                     )
@@ -689,14 +720,311 @@ function CombatantSummary({ fighter, toneClassName }) {
     );
 }
 
-function CombatModal({ combatState, players, onAdvancePhase, onClose }) {
-    const leftFighter = players.find((player) => player.id === combatState.attackerId) || null;
-    const rightFighter = players.find((player) => player.id === combatState.defenderId) || null;
+const COMBAT_LANES = ["high", "middle", "low"];
+const COMBAT_LANE_LABELS = {
+    high: "High",
+    middle: "Middle",
+    low: "Low",
+};
+const COMBAT_MODE_NORMAL = "normal";
+const COMBAT_MODE_KEYWORD = "keyword";
+const COMBAT_MODE_SWAP_ATTACK = "swap-attack";
+const COMBAT_MODE_SWAP_DEFENSE = "swap-defense";
+const BASE_COMBAT_DECK_CARDS = [
+    { id: "shared-hh", attack: "high", defense: "high", swapLane: "middle", isSpecial: false, title: "High Wall" },
+    { id: "shared-hm", attack: "high", defense: "middle", swapLane: "low", isSpecial: false, title: "Rising Split" },
+    { id: "shared-hl", attack: "high", defense: "low", swapLane: "middle", isSpecial: false, title: "Sky Hook" },
+    { id: "shared-mh", attack: "middle", defense: "high", swapLane: "low", isSpecial: false, title: "Center Break" },
+    { id: "shared-mm", attack: "middle", defense: "middle", swapLane: "high", isSpecial: false, title: "Mirror Gate" },
+    { id: "shared-ml", attack: "middle", defense: "low", swapLane: "high", isSpecial: false, title: "Cross Step" },
+    { id: "shared-lh", attack: "low", defense: "high", swapLane: "middle", isSpecial: false, title: "Shin Sweep" },
+    { id: "shared-lm", attack: "low", defense: "middle", swapLane: "high", isSpecial: false, title: "River Cut" },
+    { id: "shared-ll", attack: "low", defense: "low", swapLane: "middle", isSpecial: false, title: "Rooted Hook" },
+];
+const COMBAT_DECK_LIBRARY = {
+    "Leap-Creek": BASE_COMBAT_DECK_CARDS.concat({
+        id: "special-mm-leap-creek",
+        attack: "middle",
+        defense: "middle",
+        swapLane: "low",
+        isSpecial: true,
+        title: "Whirlpool Turn",
+    }),
+    Fangmarsh: BASE_COMBAT_DECK_CARDS.concat({
+        id: "special-mm-fangmarsh",
+        attack: "middle",
+        defense: "middle",
+        swapLane: "low",
+        isSpecial: true,
+        title: "Mantis Burst",
+    }),
+    Blackstone: BASE_COMBAT_DECK_CARDS.concat({
+        id: "special-mm-blackstone",
+        attack: "middle",
+        defense: "middle",
+        swapLane: "low",
+        isSpecial: true,
+        title: "Stone Heart",
+    }),
+    Underclaw: BASE_COMBAT_DECK_CARDS.concat({
+        id: "special-mm-underclaw",
+        attack: "middle",
+        defense: "middle",
+        swapLane: "low",
+        isSpecial: true,
+        title: "Iron Torrent",
+    }),
+    Pouch: BASE_COMBAT_DECK_CARDS.concat({
+        id: "special-mm-pouch",
+        attack: "middle",
+        defense: "middle",
+        swapLane: "low",
+        isSpecial: true,
+        title: "Tipsy Spiral",
+    }),
+};
+
+function formatCombatLane(lane) {
+    return COMBAT_LANE_LABELS[lane] || lane;
+}
+
+function describeLaneSet(lanes) {
+    return lanes.map((lane) => formatCombatLane(lane)).join(" / ");
+}
+
+function shuffleArray(items) {
+    const result = items.slice();
+
+    for (let index = result.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+    }
+
+    return result;
+}
+
+function createCombatDeckForPlayer(player) {
+    const keyword = FIGHTER_STYLE_COPY[player.name]?.keyword || "Keyword";
+    const deck = COMBAT_DECK_LIBRARY[player.name] || COMBAT_DECK_LIBRARY.Pouch;
+
+    return deck.map((card, index) => ({
+        ...card,
+        deckIndex: index,
+        keyword,
+        name: card.title,
+        laneLabel: `${formatCombatLane(card.attack)} / ${formatCombatLane(card.defense)}`,
+    }));
+}
+
+function drawCombatCards(drawPile, amount) {
+    return {
+        drawnCards: drawPile.slice(0, amount),
+        remainingDrawPile: drawPile.slice(amount),
+    };
+}
+
+function createCombatantState(player) {
+    const shuffledDeck = shuffleArray(createCombatDeckForPlayer(player));
+    const openingDraw = drawCombatCards(shuffledDeck, 5);
+
+    return {
+        id: player.id,
+        name: player.name,
+        keyword: FIGHTER_STYLE_COPY[player.name]?.keyword || "Keyword",
+        maxHitPoints: player.hitPoints ?? 3,
+        currentHitPoints: player.hitPoints ?? 3,
+        maxFormPoints: player.formPoints ?? 2,
+        currentFormPoints: player.formPoints ?? 2,
+        drawPile: openingDraw.remainingDrawPile,
+        hand: openingDraw.drawnCards,
+        discard: [],
+        selectedCardId: null,
+        selectedMode: null,
+        effectiveCardId: null,
+        stumbleTriggered: false,
+        reactionLocked: false,
+    };
+}
+
+function startCombatEncounter(players, attackerId, defenderId) {
+    const attacker = players.find((player) => player.id === attackerId);
+    const defender = players.find((player) => player.id === defenderId);
+
+    if (!attacker || !defender) {
+        return null;
+    }
+
+    return {
+        attackerId,
+        defenderId,
+        clashNumber: 1,
+        phaseIndex: 0,
+        clashLog: [],
+        combatants: {
+            [attackerId]: createCombatantState(attacker),
+            [defenderId]: createCombatantState(defender),
+        },
+    };
+}
+
+function getCombatCardById(combatant, cardId) {
+    return combatant.hand.find((card) => card.id === cardId)
+        || combatant.discard.find((card) => card.id === cardId)
+        || combatant.drawPile.find((card) => card.id === cardId)
+        || null;
+}
+
+function getEffectiveCardForCombatant(combatant) {
+    const card = getCombatCardById(combatant, combatant.effectiveCardId || combatant.selectedCardId);
+
+    if (!card) {
+        return null;
+    }
+
+    const keywordActive = card.isSpecial || combatant.selectedMode === COMBAT_MODE_KEYWORD;
+    const attackLanes = [card.attack];
+    const defenseLanes = [card.defense];
+
+    if (keywordActive && combatant.keyword === "Flurry") {
+        attackLanes.push(card.swapLane);
+    }
+
+    if (keywordActive && combatant.keyword === "Endure") {
+        defenseLanes.push(card.swapLane);
+    }
+
+    if (combatant.selectedMode === COMBAT_MODE_SWAP_ATTACK) {
+        attackLanes.splice(0, attackLanes.length, card.swapLane);
+    }
+
+    if (combatant.selectedMode === COMBAT_MODE_SWAP_DEFENSE) {
+        defenseLanes.splice(0, defenseLanes.length, card.swapLane);
+    }
+
+    return {
+        card,
+        attackLanes,
+        defenseLanes,
+        keywordActive,
+        keyword: combatant.keyword,
+        ignoresIncomingAttack: keywordActive && combatant.keyword === "Overwhelm",
+        grantsReversal: keywordActive && combatant.keyword === "Reversal",
+        allowsReactionStumble: keywordActive && combatant.keyword === "Stumble",
+    };
+}
+
+function getModeCost(card, mode) {
+    if (!mode) {
+        return 0;
+    }
+
+    if (card.isSpecial) {
+        if (mode === COMBAT_MODE_SWAP_ATTACK || mode === COMBAT_MODE_SWAP_DEFENSE) {
+            return 1;
+        }
+        return 0;
+    }
+
+    if (mode === COMBAT_MODE_NORMAL) {
+        return 0;
+    }
+
+    return 1;
+}
+
+function getAvailableModes(card) {
+    if (card.isSpecial) {
+        return [
+            { id: COMBAT_MODE_NORMAL, label: "Keyword Active", copy: "Keyword is always on for this card.", cost: 0 },
+            { id: COMBAT_MODE_SWAP_ATTACK, label: "Swap Attack", copy: `Replace attack with ${formatCombatLane(card.swapLane)}.`, cost: 1 },
+            { id: COMBAT_MODE_SWAP_DEFENSE, label: "Swap Defense", copy: `Replace defense with ${formatCombatLane(card.swapLane)}.`, cost: 1 },
+        ];
+    }
+
+    return [
+        { id: COMBAT_MODE_NORMAL, label: "Normal", copy: "Play the card as printed.", cost: 0 },
+        { id: COMBAT_MODE_KEYWORD, label: "School Special", copy: "Use this fighter's keyword.", cost: 1 },
+        { id: COMBAT_MODE_SWAP_ATTACK, label: "Swap Attack", copy: `Replace attack with ${formatCombatLane(card.swapLane)}.`, cost: 1 },
+        { id: COMBAT_MODE_SWAP_DEFENSE, label: "Swap Defense", copy: `Replace defense with ${formatCombatLane(card.swapLane)}.`, cost: 1 },
+    ];
+}
+
+function resolveAttackAgainstDefender(attackerConfig, defenderConfig) {
+    if (defenderConfig.ignoresIncomingAttack) {
+        return { hits: 0, blocks: 0, ignored: attackerConfig.attackLanes.length };
+    }
+
+    return attackerConfig.attackLanes.reduce((result, lane) => {
+        if (defenderConfig.defenseLanes.includes(lane)) {
+            result.blocks += 1;
+        } else {
+            result.hits += 1;
+        }
+        return result;
+    }, { hits: 0, blocks: 0, ignored: 0 });
+}
+
+function settleCombatCardUse(combatant) {
+    const consumedCardId = combatant.effectiveCardId || combatant.selectedCardId;
+    const consumedCard = getCombatCardById(combatant, consumedCardId);
+    const currentHand = combatant.hand.filter((card) => card.id !== consumedCardId);
+    let nextDrawPile = combatant.drawPile.slice();
+    let nextDiscard = combatant.discard.concat(consumedCard ? [consumedCard] : []);
+    let replenishedHand = currentHand.slice();
+
+    if (replenishedHand.length === 0) {
+        if (nextDrawPile.length === 0 && nextDiscard.length > 0) {
+            const reshuffledDeck = shuffleArray(nextDiscard);
+            const redraw = drawCombatCards(reshuffledDeck, Math.min(5, reshuffledDeck.length));
+            replenishedHand = redraw.drawnCards;
+            nextDrawPile = redraw.remainingDrawPile;
+            nextDiscard = [];
+        } else if (nextDrawPile.length > 0) {
+            const redraw = drawCombatCards(nextDrawPile, Math.min(5, nextDrawPile.length));
+            replenishedHand = redraw.drawnCards;
+            nextDrawPile = redraw.remainingDrawPile;
+        }
+    }
+
+    return {
+        ...combatant,
+        hand: replenishedHand,
+        drawPile: nextDrawPile,
+        discard: nextDiscard,
+        selectedCardId: null,
+        selectedMode: null,
+        effectiveCardId: null,
+        stumbleTriggered: false,
+        reactionLocked: false,
+    };
+}
+
+function CombatModal({
+    combatState,
+    onChooseCard,
+    onChooseMode,
+    onAdvancePhase,
+    onClose,
+    onTriggerStumble,
+}) {
+    const leftFighter = combatState.combatants[combatState.attackerId] || null;
+    const rightFighter = combatState.combatants[combatState.defenderId] || null;
     const phase = COMBAT_PHASES[combatState.phaseIndex] || COMBAT_PHASES[0];
 
     if (!leftFighter || !rightFighter) {
         return null;
     }
+
+    const leftCard = leftFighter.selectedCardId ? getCombatCardById(leftFighter, leftFighter.selectedCardId) : null;
+    const rightCard = rightFighter.selectedCardId ? getCombatCardById(rightFighter, rightFighter.selectedCardId) : null;
+    const leftEffective = leftCard && leftFighter.selectedMode ? getEffectiveCardForCombatant(leftFighter) : null;
+    const rightEffective = rightCard && rightFighter.selectedMode ? getEffectiveCardForCombatant(rightFighter) : null;
+    const canAdvanceSelection = Boolean(
+        leftFighter.selectedCardId
+        && rightFighter.selectedCardId
+        && leftFighter.selectedMode
+        && rightFighter.selectedMode
+    );
 
     return React.createElement(
         "div",
@@ -736,22 +1064,148 @@ function CombatModal({ combatState, players, onAdvancePhase, onClose }) {
                     React.createElement("p", { className: "practice-combat-phase-label" }, "Current Clash Step"),
                     React.createElement("h3", null, phase.title),
                     React.createElement("p", { className: "practice-combat-phase-copy" }, phase.copy),
-                    React.createElement(
-                        "div",
-                        { className: "practice-combat-placeholder-grid" },
-                        React.createElement(
+                    combatState.phaseIndex === 0
+                        ? React.createElement(
                             "div",
-                            { className: "practice-combat-placeholder-card" },
-                            React.createElement("p", { className: "practice-combat-placeholder-label" }, leftFighter.name),
-                            React.createElement("p", null, "Combat card selection, modal choice, and reveal UI will live here.")
-                        ),
-                        React.createElement(
-                            "div",
-                            { className: "practice-combat-placeholder-card" },
-                            React.createElement("p", { className: "practice-combat-placeholder-label" }, rightFighter.name),
-                            React.createElement("p", null, "Techniques, White Die reactions, and clash results plug into this flow next.")
+                            { className: "practice-combat-selection-grid" },
+                            [leftFighter, rightFighter].map((fighter) => {
+                                const selectedCard = fighter.selectedCardId ? getCombatCardById(fighter, fighter.selectedCardId) : null;
+                                const selectedConfig = selectedCard ? getEffectiveCardForCombatant(fighter) : null;
+                                const availableModes = selectedCard ? getAvailableModes(selectedCard) : [];
+
+                                return React.createElement(
+                                    "div",
+                                    { key: `selection-${fighter.id}`, className: "practice-combat-selection-column" },
+                                    React.createElement("p", { className: "practice-combat-placeholder-label" }, fighter.name),
+                                    React.createElement(
+                                        "div",
+                                        { className: "practice-combat-hand-grid" },
+                                        fighter.hand.map((card) =>
+                                            React.createElement(
+                                                "button",
+                                                {
+                                                    key: card.id,
+                                                    className: `practice-combat-card-button${fighter.selectedCardId === card.id ? " is-selected" : ""}`,
+                                                    type: "button",
+                                                    onClick: () => onChooseCard(fighter.id, card.id),
+                                                },
+                                                React.createElement("span", { className: "practice-combat-card-title" }, card.isSpecial ? "Special Card" : card.name),
+                                                React.createElement("span", { className: "practice-combat-card-copy" }, `Atk ${formatCombatLane(card.attack)} / Def ${formatCombatLane(card.defense)}`),
+                                                React.createElement("span", { className: "practice-combat-card-copy" }, `Swap ${formatCombatLane(card.swapLane)}`)
+                                            )
+                                        )
+                                    ),
+                                    selectedCard
+                                        ? React.createElement(
+                                            "div",
+                                            { className: "practice-combat-mode-grid" },
+                                            availableModes.map((mode) =>
+                                                React.createElement(
+                                                    "button",
+                                                    {
+                                                        key: `${fighter.id}-${mode.id}`,
+                                                        className: `practice-combat-mode-button${fighter.selectedMode === mode.id ? " is-selected" : ""}`,
+                                                        type: "button",
+                                                        disabled: getModeCost(selectedCard, mode.id) > fighter.currentFormPoints,
+                                                        onClick: () => onChooseMode(fighter.id, mode.id),
+                                                    },
+                                                    React.createElement("strong", null, mode.label),
+                                                    React.createElement("span", null, `${mode.copy} Cost ${mode.cost} FP`)
+                                                )
+                                            )
+                                        )
+                                        : null,
+                                    selectedConfig
+                                        ? React.createElement(
+                                            "p",
+                                            { className: "practice-combat-phase-copy" },
+                                            `Locked in: Atk ${describeLaneSet(selectedConfig.attackLanes)} / Def ${describeLaneSet(selectedConfig.defenseLanes)}${selectedConfig.keywordActive ? ` / ${selectedConfig.keyword}` : ""}`
+                                        )
+                                        : null
+                                );
+                            })
                         )
-                    ),
+                        : null,
+                    combatState.phaseIndex === 1 && leftEffective && rightEffective
+                        ? React.createElement(
+                            "div",
+                            { className: "practice-combat-reveal-grid" },
+                            [leftEffective, rightEffective].map((config) =>
+                                React.createElement(
+                                    "div",
+                                    { key: `reveal-${config.card.id}`, className: "practice-combat-placeholder-card" },
+                                    React.createElement("p", { className: "practice-combat-placeholder-label" }, config.card.isSpecial ? `${config.keyword} Special Card` : config.card.name),
+                                    React.createElement("p", null, `Attack: ${describeLaneSet(config.attackLanes)}`),
+                                    React.createElement("p", null, `Defense: ${describeLaneSet(config.defenseLanes)}`),
+                                    React.createElement("p", null, config.keywordActive ? `Keyword Active: ${config.keyword}` : "Keyword inactive this clash")
+                                )
+                            )
+                        )
+                        : null,
+                    combatState.phaseIndex === 2 && leftEffective && rightEffective
+                        ? React.createElement(
+                            "div",
+                            { className: "practice-combat-reveal-grid" },
+                            [leftFighter, rightFighter].map((fighter) => {
+                                const config = fighter.id === leftFighter.id ? leftEffective : rightEffective;
+                                const canStumble = config.allowsReactionStumble && !fighter.stumbleTriggered;
+
+                                return React.createElement(
+                                    "div",
+                                    { key: `reaction-${fighter.id}`, className: "practice-combat-placeholder-card" },
+                                    React.createElement("p", { className: "practice-combat-placeholder-label" }, fighter.name),
+                                    React.createElement("p", null, canStumble ? "Stumble may swap this revealed card for a random different card." : "No optional reaction remains for this fighter in this clash."),
+                                    canStumble
+                                        ? React.createElement(
+                                            "button",
+                                            {
+                                                className: "practice-combat-button is-primary",
+                                                type: "button",
+                                                onClick: () => onTriggerStumble(fighter.id),
+                                            },
+                                            "Trigger Stumble"
+                                        )
+                                        : null
+                                );
+                            })
+                        )
+                        : null,
+                    combatState.phaseIndex === 3 && combatState.resolutionSummary
+                        ? React.createElement(
+                            "div",
+                            { className: "practice-combat-placeholder-grid" },
+                            React.createElement(
+                                "div",
+                                { className: "practice-combat-placeholder-card" },
+                                React.createElement("p", { className: "practice-combat-placeholder-label" }, leftFighter.name),
+                                React.createElement("p", null, combatState.resolutionSummary.leftSummary)
+                            ),
+                            React.createElement(
+                                "div",
+                                { className: "practice-combat-placeholder-card" },
+                                React.createElement("p", { className: "practice-combat-placeholder-label" }, rightFighter.name),
+                                React.createElement("p", null, combatState.resolutionSummary.rightSummary)
+                            )
+                        )
+                        : null,
+                    combatState.phaseIndex === 4
+                        ? React.createElement(
+                            "div",
+                            { className: "practice-combat-placeholder-grid" },
+                            React.createElement(
+                                "div",
+                                { className: "practice-combat-placeholder-card" },
+                                React.createElement("p", { className: "practice-combat-placeholder-label" }, "Activation"),
+                                React.createElement("p", null, "Technique activation is not implemented yet, but the clash loop and deck exhaustion rules are now live.")
+                            ),
+                            React.createElement(
+                                "div",
+                                { className: "practice-combat-placeholder-card" },
+                                React.createElement("p", { className: "practice-combat-placeholder-label" }, "Clash Log"),
+                                React.createElement("p", null, combatState.clashLog[0] || "No clash events recorded yet.")
+                            )
+                        )
+                        : null,
                     React.createElement(
                         "div",
                         { className: "practice-combat-actions" },
@@ -769,6 +1223,7 @@ function CombatModal({ combatState, players, onAdvancePhase, onClose }) {
                             {
                                 className: "practice-combat-button is-primary",
                                 type: "button",
+                                disabled: combatState.phaseIndex === 0 && !canAdvanceSelection,
                                 onClick: onAdvancePhase,
                             },
                             combatState.phaseIndex === COMBAT_PHASES.length - 1 ? "Next Clash" : "Next Phase"
@@ -1387,8 +1842,11 @@ function PracticeGame() {
             return;
         }
 
+        const preparedTurn = consumeNextTurnActionBonus(players, nextPlayerIndex);
+
+        setPlayers(preparedTurn.players);
         setCurrentPlayerIndex(nextPlayerIndex);
-        setActionsRemaining(getActionsForPlayer(nextPlayer));
+        setActionsRemaining(preparedTurn.actions);
         setPendingRoll(null);
         setIsResolvingAction(false);
     }, [currentPlayer, currentPlayerIndex, gameOverReason, livingPlayers.length, players, winnerId]);
@@ -1739,8 +2197,11 @@ function PracticeGame() {
             }
 
             const nextPlayerIndex = getNextLivingIndex(updatedPlayers, currentPlayerIndex);
+            const preparedTurn = consumeNextTurnActionBonus(updatedPlayers, nextPlayerIndex);
+
+            setPlayers(preparedTurn.players);
             setCurrentPlayerIndex(nextPlayerIndex);
-            setActionsRemaining(getActionsForPlayer(updatedPlayers[nextPlayerIndex]));
+            setActionsRemaining(preparedTurn.actions);
         }, refundedActions);
     }
 
@@ -1791,11 +2252,109 @@ function PracticeGame() {
                 return existing;
             }
 
+            const leftCombatant = existing.combatants[existing.attackerId];
+            const rightCombatant = existing.combatants[existing.defenderId];
+
+            if (existing.phaseIndex === 0) {
+                if (!leftCombatant?.selectedCardId || !rightCombatant?.selectedCardId || !leftCombatant.selectedMode || !rightCombatant.selectedMode) {
+                    return existing;
+                }
+
+                const leftSelectedCard = getCombatCardById(leftCombatant, leftCombatant.selectedCardId);
+                const rightSelectedCard = getCombatCardById(rightCombatant, rightCombatant.selectedCardId);
+                const leftCost = leftSelectedCard ? getModeCost(leftSelectedCard, leftCombatant.selectedMode) : 0;
+                const rightCost = rightSelectedCard ? getModeCost(rightSelectedCard, rightCombatant.selectedMode) : 0;
+
+                return {
+                    ...existing,
+                    phaseIndex: 1,
+                    combatants: {
+                        ...existing.combatants,
+                        [existing.attackerId]: {
+                            ...leftCombatant,
+                            currentFormPoints: Math.max(0, leftCombatant.currentFormPoints - leftCost),
+                        },
+                        [existing.defenderId]: {
+                            ...rightCombatant,
+                            currentFormPoints: Math.max(0, rightCombatant.currentFormPoints - rightCost),
+                        },
+                    },
+                };
+            }
+
+            if (existing.phaseIndex === 1) {
+                return {
+                    ...existing,
+                    phaseIndex: 2,
+                };
+            }
+
+            if (existing.phaseIndex === 2) {
+                const leftConfig = getEffectiveCardForCombatant(leftCombatant);
+                const rightConfig = getEffectiveCardForCombatant(rightCombatant);
+
+                if (!leftConfig || !rightConfig) {
+                    return existing;
+                }
+
+                const leftOutcome = resolveAttackAgainstDefender(leftConfig, rightConfig);
+                const rightOutcome = resolveAttackAgainstDefender(rightConfig, leftConfig);
+                const leftReversalHits = leftConfig.grantsReversal ? leftOutcome.blocks : 0;
+                const rightReversalHits = rightConfig.grantsReversal ? rightOutcome.blocks : 0;
+                const nextLeftHitPoints = Math.max(0, leftCombatant.currentHitPoints - rightOutcome.hits - rightReversalHits);
+                const nextRightHitPoints = Math.max(0, rightCombatant.currentHitPoints - leftOutcome.hits - leftReversalHits);
+                const resolutionSummary = {
+                    leftSummary: `${leftCombatant.name} deals ${leftOutcome.hits + leftReversalHits} total damage and blocks ${rightOutcome.blocks} attack(s).`,
+                    rightSummary: `${rightCombatant.name} deals ${rightOutcome.hits + rightReversalHits} total damage and blocks ${leftOutcome.blocks} attack(s).`,
+                };
+                const nextLog = [
+                    `${leftCombatant.name} deals ${leftOutcome.hits} strike damage${leftReversalHits ? ` and ${leftReversalHits} Reversal damage` : ""}. ${rightCombatant.name} deals ${rightOutcome.hits} strike damage${rightReversalHits ? ` and ${rightReversalHits} Reversal damage` : ""}.`,
+                ].concat(existing.clashLog);
+
+                return {
+                    ...existing,
+                    phaseIndex: 3,
+                    clashLog: nextLog,
+                    resolutionSummary,
+                    combatants: {
+                        ...existing.combatants,
+                        [existing.attackerId]: {
+                            ...leftCombatant,
+                            currentHitPoints: nextLeftHitPoints,
+                        },
+                        [existing.defenderId]: {
+                            ...rightCombatant,
+                            currentHitPoints: nextRightHitPoints,
+                        },
+                    },
+                };
+            }
+
+            if (existing.phaseIndex === 3) {
+                const leftStillStanding = existing.combatants[existing.attackerId].currentHitPoints > 0;
+                const rightStillStanding = existing.combatants[existing.defenderId].currentHitPoints > 0;
+
+                if (!leftStillStanding || !rightStillStanding) {
+                    return existing;
+                }
+
+                return {
+                    ...existing,
+                    phaseIndex: 4,
+                };
+            }
+
             if (existing.phaseIndex >= COMBAT_PHASES.length - 1) {
                 return {
                     ...existing,
                     clashNumber: existing.clashNumber + 1,
                     phaseIndex: 0,
+                    resolutionSummary: null,
+                    combatants: {
+                        ...existing.combatants,
+                        [existing.attackerId]: settleCombatCardUse(existing.combatants[existing.attackerId]),
+                        [existing.defenderId]: settleCombatCardUse(existing.combatants[existing.defenderId]),
+                    },
                 };
             }
 
@@ -1809,6 +2368,153 @@ function PracticeGame() {
     function closeCombatModal() {
         setCombatState(null);
     }
+
+    function chooseCombatCard(fighterId, cardId) {
+        setCombatState((existing) => {
+            if (!existing) {
+                return existing;
+            }
+
+            const combatant = existing.combatants[fighterId];
+
+            if (!combatant) {
+                return existing;
+            }
+
+            return {
+                ...existing,
+                combatants: {
+                    ...existing.combatants,
+                    [fighterId]: {
+                        ...combatant,
+                        selectedCardId: cardId,
+                        effectiveCardId: cardId,
+                        selectedMode: null,
+                        stumbleTriggered: false,
+                    },
+                },
+            };
+        });
+    }
+
+    function chooseCombatMode(fighterId, modeId) {
+        setCombatState((existing) => {
+            if (!existing) {
+                return existing;
+            }
+
+            const combatant = existing.combatants[fighterId];
+            const selectedCard = combatant ? getCombatCardById(combatant, combatant.selectedCardId) : null;
+
+            if (!combatant || !selectedCard) {
+                return existing;
+            }
+
+            if (getModeCost(selectedCard, modeId) > combatant.currentFormPoints) {
+                return existing;
+            }
+
+            return {
+                ...existing,
+                combatants: {
+                    ...existing.combatants,
+                    [fighterId]: {
+                        ...combatant,
+                        selectedMode: modeId,
+                        effectiveCardId: combatant.selectedCardId,
+                        stumbleTriggered: false,
+                    },
+                },
+            };
+        });
+    }
+
+    function triggerCombatStumble(fighterId) {
+        setCombatState((existing) => {
+            if (!existing) {
+                return existing;
+            }
+
+            const combatant = existing.combatants[fighterId];
+            const selectedCard = combatant ? getCombatCardById(combatant, combatant.selectedCardId) : null;
+
+            if (!combatant || !selectedCard) {
+                return existing;
+            }
+
+            const availableCards = combatant.hand.filter((card) => card.id !== combatant.selectedCardId);
+
+            if (availableCards.length === 0) {
+                return existing;
+            }
+
+            const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+
+            return {
+                ...existing,
+                clashLog: [`${combatant.name} triggers Stumble and swaps into ${randomCard.name}.`].concat(existing.clashLog),
+                combatants: {
+                    ...existing.combatants,
+                    [fighterId]: {
+                        ...combatant,
+                        effectiveCardId: randomCard.id,
+                        stumbleTriggered: true,
+                    },
+                },
+            };
+        });
+    }
+
+    React.useEffect(() => {
+        if (!combatState) {
+            return;
+        }
+
+        const leftCombatant = combatState.combatants[combatState.attackerId];
+        const rightCombatant = combatState.combatants[combatState.defenderId];
+
+        if (!leftCombatant || !rightCombatant) {
+            return;
+        }
+
+        const bothDown = leftCombatant.currentHitPoints <= 0 && rightCombatant.currentHitPoints <= 0;
+        const loserId = bothDown
+            ? combatState.defenderId
+            : leftCombatant.currentHitPoints <= 0
+                ? combatState.attackerId
+                : rightCombatant.currentHitPoints <= 0
+                    ? combatState.defenderId
+                    : null;
+
+        if (!loserId) {
+            return;
+        }
+
+        const winnerCombatant = loserId === combatState.attackerId ? rightCombatant : leftCombatant;
+        const loserCombatant = loserId === combatState.attackerId ? leftCombatant : rightCombatant;
+
+        setPlayers((existingPlayers) => existingPlayers.map((player) => {
+            if (player.id === loserId) {
+                return {
+                    ...player,
+                    injured: true,
+                    reputation: clampStat(player.reputation - 1),
+                };
+            }
+
+            if (player.id === winnerCombatant.id) {
+                return {
+                    ...player,
+                    reputation: clampStat(player.reputation + 1),
+                    bonusActionsNextTurn: (player.bonusActionsNextTurn || 0) + 1,
+                };
+            }
+
+            return player;
+        }));
+        appendLog(`${winnerCombatant.name} defeats ${loserCombatant.name} in combat. ${winnerCombatant.name} gains 1 Reputation and a temporary extra action next turn. ${loserCombatant.name} becomes Injured and loses 1 Reputation.`);
+        setCombatState(null);
+    }, [combatState]);
 
     function chooseChallengeTarget(targetId) {
         setChallengeState((existing) => (
@@ -1829,12 +2535,7 @@ function PracticeGame() {
         consumeActionWithIndicators(() => {
             setPendingRoll(null);
             setChallengeState(null);
-            setCombatState({
-                attackerId: challengeState.challengerId,
-                defenderId: challengeState.targetId,
-                clashNumber: 1,
-                phaseIndex: 0,
-            });
+            setCombatState(startCombatEncounter(players, challengeState.challengerId, challengeState.targetId));
             setActionsRemaining((existing) => Math.max(0, existing - 1));
         });
     }
@@ -2154,9 +2855,11 @@ function PracticeGame() {
         combatState
             ? React.createElement(CombatModal, {
                 combatState,
-                players,
+                onChooseCard: chooseCombatCard,
+                onChooseMode: chooseCombatMode,
                 onAdvancePhase: advanceCombatPhase,
                 onClose: closeCombatModal,
+                onTriggerStumble: triggerCombatStumble,
             })
             : null,
         challengeState

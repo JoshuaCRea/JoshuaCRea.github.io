@@ -1768,6 +1768,61 @@ td {
    line-height: 1.6;
 }
 
+.practice-combat-selection-grid,
+.practice-combat-reveal-grid {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 12px;
+   margin-top: 18px;
+}
+
+.practice-combat-selection-column {
+   display: grid;
+   gap: 12px;
+}
+
+.practice-combat-hand-grid,
+.practice-combat-mode-grid {
+   display: grid;
+   gap: 10px;
+}
+
+.practice-combat-card-button,
+.practice-combat-mode-button {
+   display: grid;
+   gap: 6px;
+   justify-items: start;
+   padding: 14px;
+   border-radius: 18px;
+   border: 1px solid rgba(255, 255, 255, 0.08);
+   background: rgba(255, 255, 255, 0.03);
+   color: var(--practice-text);
+   text-align: left;
+   cursor: pointer;
+}
+
+.practice-combat-card-button.is-selected,
+.practice-combat-mode-button.is-selected {
+   border-color: rgba(215, 179, 114, 0.72);
+   background: rgba(215, 179, 114, 0.12);
+}
+
+.practice-combat-card-button:disabled,
+.practice-combat-mode-button:disabled {
+   opacity: 0.4;
+   cursor: not-allowed;
+}
+
+.practice-combat-card-title {
+   font-weight: 700;
+}
+
+.practice-combat-card-copy,
+.practice-combat-mode-button span {
+   color: var(--practice-muted);
+   line-height: 1.45;
+}
+
 .practice-combat-placeholder-grid {
    display: grid;
    grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1933,6 +1988,11 @@ td {
    }
 
    .practice-combat-placeholder-grid {
+      grid-template-columns: 1fr;
+   }
+
+   .practice-combat-selection-grid,
+   .practice-combat-reveal-grid {
       grid-template-columns: 1fr;
    }
 

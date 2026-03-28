@@ -88,16 +88,21 @@
             border: 4px solid rgba(35, 26, 13, 0.8);
             background: rgba(245, 230, 179, 0.55);
             border-radius: 8px;
-            padding: 18px;
+            padding: 0 18px 18px;
             display: grid;
+            justify-items: center;
             gap: 18px;
-            min-height: 540px;
+            width: min(100%, 360px);
+            min-height: 360px;
+            margin: 0 auto;
+            overflow: hidden;
         }
 
         .array-row {
             display: flex;
             justify-content: space-between;
             gap: 20px;
+            margin-top: -10px;
         }
 
         .array-block {
@@ -106,10 +111,8 @@
             flex: 1 1 0;
         }
 
-        .array-block h3 {
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
+        .array-block:last-child {
+            justify-items: end;
         }
 
         .array-slots {
@@ -133,41 +136,73 @@
         }
 
         .slot.defense {
-            background: var(--gray);
+            background: #161616;
             color: #f4f7fb;
         }
 
-        .figure {
-            flex: 1 1 auto;
-            min-height: 220px;
-            border: 2px dashed rgba(41, 28, 11, 0.4);
-            border-radius: 12px;
+        .deck-grid {
             display: grid;
-            place-items: center;
+            grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+            gap: 10px;
+        }
+
+        .deck-card {
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 12px;
+            display: grid;
+            gap: 6px;
+        }
+
+        .deck-card strong {
+            color: var(--text);
+        }
+
+        .deck-card p {
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .deck-gallery {
+            display: grid;
+            gap: 16px;
+        }
+
+        .deck-sheet {
+            display: grid;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--line);
+        }
+
+        .deck-sheet h3 {
             text-align: center;
-            padding: 20px;
-            font-style: italic;
+            font-size: 1rem;
+        }
+
+        .deck-sheet p {
+            text-align: center;
+            color: var(--muted);
+            line-height: 1.5;
         }
 
         .modes {
             display: grid;
             gap: 10px;
+            width: 100%;
         }
 
         .mode {
             display: grid;
-            grid-template-columns: 48px minmax(0, 1fr);
             align-items: center;
             gap: 10px;
             padding: 8px 10px;
             background: rgba(255, 255, 255, 0.5);
             border: 2px solid rgba(31, 23, 12, 0.35);
             border-radius: 8px;
-        }
-
-        .mode-number {
-            font-size: 1.3rem;
-            font-weight: 700;
             text-align: center;
         }
 
@@ -222,7 +257,6 @@
                 <div class="card-shell">
                     <div class="array-row">
                         <div class="array-block">
-                            <h3>Attack Array</h3>
                             <div class="array-slots">
                                 <div class="slot attack">H</div>
                                 <div class="slot attack">M</div>
@@ -230,31 +264,26 @@
                             </div>
                         </div>
                         <div class="array-block">
-                            <h3>Defense Array</h3>
                             <div class="array-slots">
-                                <div class="slot defense">?</div>
-                                <div class="slot defense">W</div>
+                                <div class="slot defense">L</div>
+                                <div class="slot defense">M</div>
                                 <div class="slot defense">H</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="figure">
-                        Fighter illustration / card art area
-                    </div>
-
                     <div class="modes">
                         <div class="mode">
-                            <div class="mode-number">3</div>
                             <div class="mode-label">Normal</div>
                         </div>
                         <div class="mode">
-                            <div class="mode-number">4</div>
                             <div class="mode-label">School Special</div>
                         </div>
                         <div class="mode">
-                            <div class="mode-number">5</div>
-                            <div class="mode-label">Random Special</div>
+                            <div class="mode-label">Swap Attack</div>
+                        </div>
+                        <div class="mode">
+                            <div class="mode-label">Swap Defense</div>
                         </div>
                     </div>
                 </div>
@@ -262,28 +291,150 @@
 
             <div class="notes">
                 <section class="section">
-                    <p class="label">Confirmed So Far</p>
+                    <p class="label">Clash Rules</p>
                     <ul>
                         <li>Combat takes place in a dedicated modal above the map and roster page.</li>
-                        <li>A clash has five phases: Selection, Reveal, Reaction, Calculation, Activation.</li>
-                        <li>Digital “place a stone” effects will become Form Point deductions.</li>
-                        <li>Both fighters must always be able to see their remaining Hit Points and Form Points.</li>
-                        <li>Fight is only available when the active player shares a space with at least one other living player.</li>
-                        <li>If multiple opponents share the space, the challenger chooses who to challenge.</li>
-                        <li>The challenged player may accept or decline the challenge.</li>
-                        <li>Declining a challenge lowers Reputation by 1.</li>
+                        <li>Each clash has five phases: Selection, Reveal, Reaction, Calculation, Activation.</li>
+                        <li>Each card has one printed attack lane and one printed defense lane.</li>
+                        <li>If an attack lane matches a defense lane, that strike is blocked.</li>
+                        <li>If it does not match, the defender loses 1 Hit Point.</li>
+                        <li>At 0 Hit Points, that fighter loses, becomes Injured, loses 1 Reputation, and returns to the main game.</li>
+                        <li>Hit Points and Form Points reset after the fight ends.</li>
                     </ul>
                 </section>
 
                 <section class="section">
-                    <p class="label">Still Needed</p>
-                    <ul class="todo">
-                        <li>Exact card anatomy: what each slot pattern means on real cards.</li>
-                        <li>Damage calculation from two revealed cards.</li>
-                        <li>Precise Form Point costs for modal options.</li>
-                        <li>Deck, hand, discard, and reshuffle rules.</li>
-                        <li>Unique tenth card and school-specific specials.</li>
-                        <li>Technique timing and White Die behavior for non-player adversaries.</li>
+                    <p class="label">Modes</p>
+                    <ul>
+                        <li><strong>Normal</strong>: play the printed card as-is. Cost: 0 Form Points.</li>
+                        <li><strong>School Special</strong>: use the fighter keyword on that clash. Cost: 1 Form Point.</li>
+                        <li><strong>Swap Attack</strong>: replace the printed attack lane with the card's swap lane. Cost: 1 Form Point.</li>
+                        <li><strong>Swap Defense</strong>: replace the printed defense lane with the card's swap lane. Cost: 1 Form Point.</li>
+                        <li>The special 10th card always has its keyword active, then may still pay for one swap.</li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <p class="label">All Five Decks</p>
+                    <div class="deck-gallery">
+                        <div class="deck-sheet">
+                            <h3>Leap-Creek</h3>
+                            <p>Keyword: Reversal. Special card: Whirlpool Turn.</p>
+                            <div class="deck-grid">
+                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Whirlpool Turn</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
+                            </div>
+                        </div>
+                        <div class="deck-sheet">
+                            <h3>Fangmarsh</h3>
+                            <p>Keyword: Flurry. Special card: Mantis Burst.</p>
+                            <div class="deck-grid">
+                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Mantis Burst</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
+                            </div>
+                        </div>
+                        <div class="deck-sheet">
+                            <h3>Blackstone</h3>
+                            <p>Keyword: Endure. Special card: Stone Heart.</p>
+                            <div class="deck-grid">
+                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Stone Heart</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
+                            </div>
+                        </div>
+                        <div class="deck-sheet">
+                            <h3>Underclaw</h3>
+                            <p>Keyword: Overwhelm. Special card: Iron Torrent.</p>
+                            <div class="deck-grid">
+                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Iron Torrent</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
+                            </div>
+                        </div>
+                        <div class="deck-sheet">
+                            <h3>Pouch</h3>
+                            <p>Keyword: Stumble. Special card: Tipsy Spiral.</p>
+                            <div class="deck-grid">
+                                <div class="deck-card"><strong>High Wall</strong><p>H / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Rising Split</strong><p>H / M<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Sky Hook</strong><p>H / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Center Break</strong><p>M / H<br>Swap L</p></div>
+                                <div class="deck-card"><strong>Mirror Gate</strong><p>M / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Cross Step</strong><p>M / L<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Shin Sweep</strong><p>L / H<br>Swap M</p></div>
+                                <div class="deck-card"><strong>River Cut</strong><p>L / M<br>Swap H</p></div>
+                                <div class="deck-card"><strong>Rooted Hook</strong><p>L / L<br>Swap M</p></div>
+                                <div class="deck-card"><strong>Tipsy Spiral</strong><p>M / M<br>Swap L<br>Keyword Always On</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <p class="label">Shared Pattern</p>
+                    <div class="deck-grid">
+                        <div class="deck-card"><strong>H / H</strong><p>Swap M</p></div>
+                        <div class="deck-card"><strong>H / M</strong><p>Swap L</p></div>
+                        <div class="deck-card"><strong>H / L</strong><p>Swap M</p></div>
+                        <div class="deck-card"><strong>M / H</strong><p>Swap L</p></div>
+                        <div class="deck-card"><strong>M / M</strong><p>Swap H</p></div>
+                        <div class="deck-card"><strong>M / L</strong><p>Swap H</p></div>
+                        <div class="deck-card"><strong>L / H</strong><p>Swap M</p></div>
+                        <div class="deck-card"><strong>L / M</strong><p>Swap H</p></div>
+                        <div class="deck-card"><strong>L / L</strong><p>Swap M</p></div>
+                        <div class="deck-card"><strong>Special M / M</strong><p>Swap L<br>Keyword always on</p></div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <p class="label">Keywords</p>
+                    <ul>
+                        <li><strong>Reversal</strong>: each successful block also deals 1 Hit Point back to the attacker.</li>
+                        <li><strong>Flurry</strong>: the card gains a second distinct attack lane using its swap lane.</li>
+                        <li><strong>Endure</strong>: the card gains a second distinct defense lane using its swap lane.</li>
+                        <li><strong>Overwhelm</strong>: ignore the opponent's attack for that clash; it is skipped, not blocked.</li>
+                        <li><strong>Stumble</strong>: during Reaction, optionally replace the revealed card with a different random card.</li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <p class="label">Deck Flow</p>
+                    <ul>
+                        <li>At combat start, each fighter draws 5 cards.</li>
+                        <li>Clashes can only use cards currently in hand.</li>
+                        <li>Used cards leave the hand until reshuffle.</li>
+                        <li>When the first 5 are gone, draw the second 5.</li>
+                        <li>If all 10 are exhausted, reshuffle and draw again so combat always continues.</li>
                     </ul>
                 </section>
 
