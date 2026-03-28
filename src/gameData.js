@@ -28,11 +28,11 @@ export const TOWN_DESCRIPTIONS = {
         "School name": "Kwoon of Pai Tong Long",
     },
     "#Underclaw": {
-        Nickname: "The Hidden City",
+        Nickname: "The Buried City",
         "School name": "Kwoon of Changquan",
     },
     "#Pouch": {
-        Nickname: "Forest of Wine and Shadow",
+        Nickname: "The Wooded Winery",
         "School name": "School of Zui Quan",
     },
 };
@@ -43,6 +43,12 @@ export const SCHOOL_SIGILS = {
     Fangmarsh: new URL("../images/fangmarsh_sigil.png", import.meta.url).href,
     Underclaw: new URL("../images/underclaw_sigil.png", import.meta.url).href,
     Pouch: new URL("../images/pouch_sigil.png", import.meta.url).href,
+};
+
+export const FIGHTER_STATUS_FACES = {
+    healthy: new URL("../images/grinning-face-with-big-eyes-svgrepo-com.svg", import.meta.url).href,
+    injured: new URL("../images/face-with-head-bandage-svgrepo-com.svg", import.meta.url).href,
+    dead: new URL("../images/dizzy-face-svgrepo-com.svg", import.meta.url).href,
 };
 
 export const TRACK_DETAILS = [
@@ -149,4 +155,8 @@ export function createPlayers() {
 
 export function getSchoolSigil(playerName) {
     return SCHOOL_SIGILS[playerName] || "";
+}
+
+export function getFighterStatusFace(status) {
+    return FIGHTER_STATUS_FACES[status] || FIGHTER_STATUS_FACES.healthy;
 }

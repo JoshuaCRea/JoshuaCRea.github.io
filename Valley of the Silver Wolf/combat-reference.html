@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combat Reference</title>
+    <style>
+        :root {
+            --bg: #0d1422;
+            --panel: rgba(19, 28, 46, 0.9);
+            --panel-strong: rgba(25, 36, 58, 0.96);
+            --text: #f4efe3;
+            --muted: #b8c3d7;
+            --accent: #d7b372;
+            --line: rgba(255, 255, 255, 0.1);
+            --red: #ce584f;
+            --gray: #737b8b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top, rgba(215, 179, 114, 0.16), transparent 28%),
+                linear-gradient(180deg, #111a2b, #08101c 72%);
+        }
+
+        main {
+            width: min(1100px, calc(100% - 32px));
+            margin: 32px auto;
+            display: grid;
+            gap: 20px;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--panel);
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+            padding: 24px;
+        }
+
+        h1, h2, h3, p {
+            margin: 0;
+        }
+
+        .kicker,
+        .label {
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-size: 0.75rem;
+            color: var(--accent);
+        }
+
+        .hero {
+            display: grid;
+            gap: 8px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .hero p:last-child {
+            max-width: 70ch;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+            gap: 20px;
+        }
+
+        .card-preview {
+            background: linear-gradient(180deg, #baaf7d, #8d7448);
+            color: #241c10;
+        }
+
+        .card-shell {
+            border: 4px solid rgba(35, 26, 13, 0.8);
+            background: rgba(245, 230, 179, 0.55);
+            border-radius: 8px;
+            padding: 18px;
+            display: grid;
+            gap: 18px;
+            min-height: 540px;
+        }
+
+        .array-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .array-block {
+            display: grid;
+            gap: 10px;
+            flex: 1 1 0;
+        }
+
+        .array-block h3 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .array-slots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .slot {
+            width: 34px;
+            height: 42px;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            border: 2px solid rgba(0, 0, 0, 0.35);
+        }
+
+        .slot.attack {
+            background: var(--red);
+            color: #2d0d08;
+        }
+
+        .slot.defense {
+            background: var(--gray);
+            color: #f4f7fb;
+        }
+
+        .figure {
+            flex: 1 1 auto;
+            min-height: 220px;
+            border: 2px dashed rgba(41, 28, 11, 0.4);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .modes {
+            display: grid;
+            gap: 10px;
+        }
+
+        .mode {
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(31, 23, 12, 0.35);
+            border-radius: 8px;
+        }
+
+        .mode-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .mode-label {
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+        }
+
+        .notes {
+            display: grid;
+            gap: 16px;
+        }
+
+        .section {
+            display: grid;
+            gap: 10px;
+            padding: 16px;
+            border-radius: 18px;
+            background: var(--panel-strong);
+            border: 1px solid var(--line);
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .todo {
+            color: #f0d9ab;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="panel hero">
+            <p class="kicker">Live Reference</p>
+            <h1>Combat Card Working Spec</h1>
+            <p>This page is a permanent place for the evolving combat-card design while we implement the clash system. Keep it open in Live Server beside the main game and we can update it as rules solidify.</p>
+        </section>
+
+        <section class="layout">
+            <article class="panel card-preview">
+                <div class="card-shell">
+                    <div class="array-row">
+                        <div class="array-block">
+                            <h3>Attack Array</h3>
+                            <div class="array-slots">
+                                <div class="slot attack">H</div>
+                                <div class="slot attack">M</div>
+                                <div class="slot attack">L</div>
+                            </div>
+                        </div>
+                        <div class="array-block">
+                            <h3>Defense Array</h3>
+                            <div class="array-slots">
+                                <div class="slot defense">?</div>
+                                <div class="slot defense">W</div>
+                                <div class="slot defense">H</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="figure">
+                        Fighter illustration / card art area
+                    </div>
+
+                    <div class="modes">
+                        <div class="mode">
+                            <div class="mode-number">3</div>
+                            <div class="mode-label">Normal</div>
+                        </div>
+                        <div class="mode">
+                            <div class="mode-number">4</div>
+                            <div class="mode-label">School Special</div>
+                        </div>
+                        <div class="mode">
+                            <div class="mode-number">5</div>
+                            <div class="mode-label">Random Special</div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <div class="notes">
+                <section class="section">
+                    <p class="label">Confirmed So Far</p>
+                    <ul>
+                        <li>Combat takes place in a dedicated modal above the map and roster page.</li>
+                        <li>A clash has five phases: Selection, Reveal, Reaction, Calculation, Activation.</li>
+                        <li>Digital “place a stone” effects will become Form Point deductions.</li>
+                        <li>Both fighters must always be able to see their remaining Hit Points and Form Points.</li>
+                        <li>Fight is only available when the active player shares a space with at least one other living player.</li>
+                        <li>If multiple opponents share the space, the challenger chooses who to challenge.</li>
+                        <li>The challenged player may accept or decline the challenge.</li>
+                        <li>Declining a challenge lowers Reputation by 1.</li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <p class="label">Still Needed</p>
+                    <ul class="todo">
+                        <li>Exact card anatomy: what each slot pattern means on real cards.</li>
+                        <li>Damage calculation from two revealed cards.</li>
+                        <li>Precise Form Point costs for modal options.</li>
+                        <li>Deck, hand, discard, and reshuffle rules.</li>
+                        <li>Unique tenth card and school-specific specials.</li>
+                        <li>Technique timing and White Die behavior for non-player adversaries.</li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <p class="label">Where To Open</p>
+                    <ul>
+                        <li>Open <code>/combat-reference.html</code> in Live Server.</li>
+                        <li>Keep it next to the main game while we translate the rulebook into code.</li>
+                        <li>I can keep updating this page as the combat system gets more specific.</li>
+                    </ul>
+                </section>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
