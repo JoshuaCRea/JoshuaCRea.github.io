@@ -364,6 +364,11 @@ td {
    color: var(--practice-gold);
 }
 
+.practice-roster-stats .practice-stat-label.is-stamina {
+   display: inline-block;
+   transform: translateX(-0.38em);
+}
+
 .practice-hero h1,
 .practice-turn-card h2,
 .practice-sidebar h2,
@@ -511,7 +516,7 @@ td {
    height: 88px;
    object-fit: contain;
    display: block;
-   margin: 10px auto 0;
+   margin: 2px auto 0;
    filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.28));
 }
 
@@ -568,7 +573,7 @@ td {
 }
 
 .practice-node-label {
-   margin-top: 8px;
+   margin-top: -16px;
    font-family: "New Rocker", serif;
    font-size: 0.98rem;
    font-weight: 400;
@@ -775,6 +780,14 @@ td {
 .practice-fighter-profile-copy h2 {
    margin: 4px 0 2px;
    font-size: 1.75rem;
+}
+
+.practice-fighter-profile-city-name {
+   margin: 6px 0 4px;
+   font-size: clamp(2.35rem, 4vw, 3rem);
+   line-height: 1;
+   color: var(--fighter-city-color, #fff9ee);
+   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
 }
 
 .practice-fighter-profile-kicker,
@@ -1117,7 +1130,7 @@ td {
 
 .practice-roster-card.is-active {
    padding: 22px;
-   min-height: 332px;
+   min-height: 344px;
    box-shadow:
       0 0 0 2px rgba(255, 255, 255, 0.46),
       0 0 64px rgba(133, 214, 255, 0.34),
@@ -1135,6 +1148,17 @@ td {
    display: grid;
    justify-items: center;
    gap: 10px;
+   margin-bottom: 18px;
+   min-width: 0;
+}
+
+.practice-active-turn-row {
+   display: grid;
+   grid-template-columns: 106px auto 106px;
+   justify-content: center;
+   align-items: start;
+   column-gap: 16px;
+   margin-top: 6px;
    margin-bottom: 18px;
 }
 
@@ -1154,7 +1178,7 @@ td {
    flex-wrap: nowrap;
    width: 44px;
    min-height: 20px;
-   margin: 0 auto;
+   margin: 4px auto 0;
    position: relative;
    transition: opacity 100ms ease;
 }
@@ -1200,17 +1224,26 @@ td {
 }
 
 .practice-roster-player-name,
-.practice-roster-light-of {
+.practice-roster-city-name {
    margin: 0;
-   font-size: 0.56rem;
    line-height: 1.1;
-   text-transform: uppercase;
-   letter-spacing: 0.16em;
-   color: var(--practice-muted);
 }
 
-.practice-roster-light-of {
-   color: var(--practice-gold);
+.practice-roster-player-name {
+   font-size: 0.62rem;
+   letter-spacing: 0.16em;
+   color: var(--practice-muted);
+   text-transform: uppercase;
+}
+
+.practice-roster-city-name {
+   font-size: 1.55rem;
+   font-family: 'Cinzel', serif;
+   font-weight: 700;
+   letter-spacing: 0.03em;
+   color: #fff9ee;
+   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+   text-transform: none;
 }
 
 .practice-roster-corner {
@@ -1302,13 +1335,21 @@ td {
 }
 
 .practice-roster-card.is-active .practice-roster-player-name,
-.practice-roster-card.is-active .practice-roster-light-of {
-   font-size: 0.64rem;
+.practice-roster-card.is-active .practice-roster-city-name {
+   font-size: inherit;
+}
+
+.practice-roster-card.is-active .practice-roster-player-name {
+   font-size: 0.62rem;
+}
+
+.practice-roster-card.is-active .practice-roster-city-name {
+   font-size: 1.55rem;
 }
 
 .practice-roster-card.is-active .practice-action-indicators {
-   margin-top: 18px;
-   margin-bottom: 26px;
+   margin-top: 0;
+   margin-bottom: 0;
 }
 
 .practice-roster-card.is-active .practice-action-indicator {
@@ -1319,7 +1360,7 @@ td {
 .practice-roster-card.is-active .practice-roster-stats {
    /* Active fighter stats must always stay on a single row. */
    grid-template-columns: repeat(5, minmax(0, 1fr));
-   gap: 6px;
+   gap: 8px;
    margin-top: 14px;
 }
 
@@ -1335,14 +1376,18 @@ td {
 }
 
 .practice-roster-card.is-active .practice-roster-bar-wrap {
-   margin-top: 18px;
+   margin-top: 6px;
 }
 
 .practice-roster-stats {
    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
-   gap: 6px;
+   gap: 8px;
    margin-top: 10px;
    justify-items: center;
+}
+
+.practice-roster-card:not(.is-active) .practice-roster-stats {
+   display: none;
 }
 
 .practice-stat-pill {
@@ -1350,6 +1395,9 @@ td {
    border-radius: 12px;
    min-height: 0;
    width: 100%;
+   min-width: 0;
+   box-sizing: border-box;
+   overflow: hidden;
    text-align: center;
    justify-items: center;
 }
@@ -1365,11 +1413,16 @@ td {
 
 .practice-roster-bar-label {
    margin: 0 0 8px;
+   text-transform: uppercase;
+   letter-spacing: 0.18em;
+   font-size: 0.72rem;
+   color: var(--practice-gold);
+   text-align: center;
 }
 
 .practice-roster-bar-indicator {
    position: relative;
-   padding-bottom: 12px;
+   padding-bottom: 9px;
 }
 
 .practice-roster-bar-pointer {
@@ -1379,11 +1432,14 @@ td {
    transform: translateX(-50%);
    width: 0;
    height: 0;
-   border-left: 7px solid transparent;
-   border-right: 7px solid transparent;
-   border-bottom: 10px solid rgba(255, 255, 255, 0.96);
-   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+   border-left: 8px solid transparent;
+   border-right: 8px solid transparent;
+   border-bottom: 11px solid rgba(255, 255, 255, 1);
+   filter:
+      drop-shadow(0 0 3px rgba(182, 232, 255, 0.9))
+      drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55));
    transition: left 1000ms ease;
+   z-index: 3;
 }
 
 .practice-roster-bar {
@@ -1431,18 +1487,87 @@ td {
    min-width: 0;
 }
 
+.practice-turn-arrow-button {
+   display: grid;
+   place-items: center;
+   align-self: start;
+   width: 106px;
+   min-width: 0;
+   padding: 0;
+   background: transparent;
+   border: none;
+   color: var(--practice-text);
+   cursor: pointer;
+   transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.practice-turn-arrow-button.is-undo {
+   justify-self: end;
+   transform: translate(-32px, 4px);
+}
+
+.practice-turn-arrow-button.is-pass {
+   justify-self: start;
+   transform: translateY(4px);
+}
+
+.practice-turn-arrow-button:disabled {
+   opacity: 0.38;
+   cursor: not-allowed;
+}
+
+.practice-turn-arrow {
+   display: grid;
+   place-items: center;
+   width: 106px;
+   height: 32px;
+   padding: 0 12px;
+   font-family: 'Manrope', sans-serif;
+   text-transform: uppercase;
+   letter-spacing: 0.16em;
+   font-size: 0.56rem;
+   line-height: 1.1;
+   color: rgba(245, 248, 255, 0.96);
+   background: linear-gradient(180deg, rgba(103, 137, 185, 0.96), rgba(62, 90, 130, 0.92));
+   clip-path: polygon(0 0, 82% 0, 100% 50%, 82% 100%, 0 100%, 10% 50%);
+   box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.24),
+      0 10px 20px rgba(0, 0, 0, 0.22),
+      0 0 18px rgba(139, 191, 255, 0.2);
+   text-align: center;
+   white-space: nowrap;
+}
+
+.practice-turn-arrow-pass {
+   clip-path: polygon(0 0, 82% 0, 100% 50%, 82% 100%, 0 100%, 10% 50%);
+   padding-right: 18px;
+   padding-left: 12px;
+}
+
+.practice-turn-arrow-undo {
+   clip-path: polygon(18% 0, 100% 0, 90% 50%, 100% 100%, 18% 100%, 0 50%);
+   padding-left: 18px;
+   padding-right: 12px;
+}
+
+.practice-turn-arrow-button:not(:disabled):hover .practice-turn-arrow-pass,
+.practice-turn-arrow-button:not(:disabled):focus-visible .practice-turn-arrow-pass {
+   transform: translateX(2px);
+}
+
+.practice-turn-arrow-button:not(:disabled):hover .practice-turn-arrow-undo,
+.practice-turn-arrow-button:not(:disabled):focus-visible .practice-turn-arrow-undo {
+   transform: translateX(-2px);
+}
+
 .practice-player-action-group {
    display: grid;
    justify-items: center;
    align-content: start;
    gap: 4px;
    width: 100%;
-   grid-template-rows: 38px auto;
+   grid-template-rows: 42px minmax(18px, auto);
    min-width: 0;
-}
-
-.practice-player-action-group.is-travel-group .practice-player-action-text {
-   margin-top: 4px;
 }
 
 .practice-travel-buttons {
@@ -1638,11 +1763,24 @@ td {
 }
 
 .practice-player-action-text {
+   display: flex;
+   align-items: flex-start;
+   justify-content: center;
+   font-family: 'Manrope', sans-serif;
    font-size: 0.56rem;
-   line-height: 1.25;
+   line-height: 1.1;
+   text-transform: uppercase;
+   letter-spacing: 0.16em;
+   min-height: 18px;
+   margin: 0;
+   transform: translateY(6px);
    text-align: center;
    text-wrap: balance;
    max-width: 100%;
+}
+
+.practice-player-action-group.is-travel-group .practice-player-action-text {
+   transform: translateY(8px);
 }
 
 .practice-effects-grid {
@@ -1920,27 +2058,80 @@ td {
 }
 
 .practice-challenge-modal {
-   width: min(760px, 100%);
+   width: min(560px, calc(100% - 32px));
+   padding: 20px 22px 24px;
+   border-radius: 24px;
+   text-align: center;
+}
+
+.practice-challenge-modal h2 {
+   font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.practice-challenge-modal .practice-modal-kicker {
+   text-align: center;
+}
+
+.practice-challenge-modal .practice-combat-phase-copy {
+   margin-top: 10px;
+   line-height: 1.5;
+   text-align: center;
+}
+
+.practice-challenge-modal .practice-combat-actions {
+   justify-content: center;
+   margin-top: 16px;
+ }
+
+.practice-challenge-modal .practice-combat-button {
+   min-width: 140px;
+   padding: 10px 16px;
+   background: transparent;
+}
+
+.practice-challenge-modal .practice-combat-button.is-accept {
+   border-color: rgba(88, 184, 112, 0.95);
+   color: #d9f7de;
+   box-shadow: inset 0 0 0 1px rgba(88, 184, 112, 0.22);
+}
+
+.practice-challenge-modal .practice-combat-button.is-decline {
+   border-color: rgba(208, 86, 86, 0.95);
+   color: #ffd7d7;
+   box-shadow: inset 0 0 0 1px rgba(208, 86, 86, 0.2);
 }
 
 .practice-challenge-options {
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-   gap: 14px;
-   margin-top: 18px;
+   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+   gap: 10px;
+   margin-top: 14px;
 }
 
 .practice-challenge-option {
    display: grid;
-   gap: 8px;
-   justify-items: start;
-   padding: 16px;
-   border-radius: 18px;
+   gap: 6px;
+   justify-items: center;
+   padding: 12px;
+   border-radius: 16px;
    border: 1px solid rgba(215, 179, 114, 0.28);
    background: rgba(255, 255, 255, 0.04);
    color: var(--practice-text);
-   text-align: left;
+   text-align: center;
    cursor: pointer;
+}
+
+.practice-challenge-option .practice-combatant-kicker {
+   font-size: 0.62rem;
+}
+
+.practice-challenge-option strong {
+   font-size: 1rem;
+}
+
+.practice-challenge-option span {
+   font-size: 0.84rem;
+   color: var(--practice-muted);
 }
 
 .practice-challenge-option strong,
@@ -2122,9 +2313,11 @@ td {
    .practice-node-sigil {
       width: 58px;
       height: 58px;
+      margin-top: 0;
    }
 
    .practice-node-label {
+      margin-top: -12px;
       font-size: 0.86rem;
    }
 
@@ -2175,9 +2368,11 @@ td {
    .practice-node-sigil {
       width: 48px;
       height: 48px;
+      margin-top: -2px;
    }
 
    .practice-node-label {
+      margin-top: -13px;
       font-size: 0.74rem;
    }
 
