@@ -3,6 +3,7 @@ import {
     CW_DIR_VALUE,
     TRACK_DETAILS,
     createPlayers,
+    getSchoolSigil,
     getTownCopy,
     normalizeIndex,
 } from "./gameData.js";
@@ -13,6 +14,7 @@ const MAX_STAT = 5;
 const SCHOOL_STARTING_INTEGRITY = 3;
 const SILVER_WOLF_BASE_STRENGTH = 20;
 const TOTAL_TO_CHALLENGE = 15;
+const TRAVEL_ARROWS_ICON = new URL("../images/arrows-couple-svgrepo-com.svg", import.meta.url).href;
 
 function createInitialPlayers() {
     return createPlayers().map((player) => ({
@@ -247,9 +249,27 @@ function StatPill({ label, value }) {
     );
 }
 
-function PlayerCard({ player, isActive, isWinner }) {
-    const playerLocation = TRACK_DETAILS[player.position];
-    const townCopy = getTownCopy(playerLocation.id);
+function getRosterEntries(players, startIndex) {
+    return players.map((player, offset) => {
+        const playerIndex = (startIndex + offset) % players.length;
+        return {
+            player: players[playerIndex],
+            playerIndex,
+        };
+    });
+}
+
+const PLAYER_ACTIONS = [
+    { id: "counter-clockwise", label: "Travel", shapeClass: "is-arrow-ccw", ariaLabel: "Travel counter-clockwise" },
+    { id: "clockwise", label: "Travel", shapeClass: "is-arrow-cw", ariaLabel: "Travel clockwise" },
+    { id: "quest", label: "Embark on a Quest", shapeClass: "is-quest" },
+    { id: "fight", label: "Fight", shapeClass: "is-fight" },
+    { id: "heal", label: "Heal", shapeClass: "is-heal" },
+    { id: "save-school", label: "Save School", shapeClass: "is-school" },
+];
+
+function PlayerCard({ player, isActive, isWinner, actionsRemaining }) {
+    const sigilSrc = getSchoolSigil(player.name);
     const classes = `practice-roster-card${isActive ? " is-active" : ""}${isWinner ? " is-winner" : ""}`;
 
     return React.createElement(
@@ -268,11 +288,29 @@ function PlayerCard({ player, isActive, isWinner }) {
                     className: "practice-roster-dot",
                     style: { backgroundColor: player.color },
                 }),
-                React.createElement("h3", null, player.name)
+                React.createElement(
+                    "h3",
+                    {
+                        className: player.alive ? "" : "is-dead",
+                    },
+                    player.name
+                )
             ),
-            isActive ? React.createElement("span", { className: "practice-turn-badge" }, "Current turn") : null
+            React.createElement(
+                "div",
+                { className: "practice-roster-corner" },
+                sigilSrc
+                    ? React.createElement("img", {
+                        className: "practice-roster-sigil",
+                        src: sigilSrc,
+                        alt: `${player.name} school sigil`,
+                    })
+                    : null
+            )
         ),
-        React.createElement("p", { className: "practice-roster-location" }, player.alive ? playerLocation.name : "Dead"),
+        !player.alive
+            ? React.createElement("p", { className: "practice-roster-location" }, "Dead")
+            : null,
         React.createElement(
             "div",
             { className: "practice-roster-stats" },
@@ -305,12 +343,54 @@ function PlayerCard({ player, isActive, isWinner }) {
                 React.createElement("span", { className: "practice-roster-bar-pointer" })
             )
         ),
-        React.createElement("p", { className: "practice-roster-copy" }, `${townCopy.description} • ${townCopy.school}`)
+        isActive
+            ? React.createElement(
+                "div",
+                { className: "practice-action-indicators" },
+                React.createElement("p", { className: "practice-action-indicators-label" }, "Actions"),
+                React.createElement(
+                    "div",
+                    { className: "practice-action-indicators-row" },
+                    Array.from({ length: actionsRemaining }).map((_, index) =>
+                        React.createElement("span", {
+                            key: `action-${player.id}-${index}`,
+                            className: "practice-action-indicator",
+                            "aria-label": `Action ${index + 1} remaining`,
+                        })
+                    )
+                )
+            )
+            : null,
+        isActive
+            ? React.createElement(
+                "div",
+                { className: "practice-player-actions" },
+                PLAYER_ACTIONS.map((action) =>
+                    React.createElement(
+                        "button",
+                        {
+                            key: `${player.id}-${action.id}`,
+                            className: "practice-player-action-button",
+                            type: "button",
+                            "aria-label": action.ariaLabel || action.label,
+                        },
+                        React.createElement("span", {
+                            className: `practice-player-action-shape ${action.shapeClass}${action.shapeClass.startsWith("is-arrow") ? " is-image-arrow" : ""}`,
+                            "aria-hidden": "true",
+                            style: action.shapeClass.startsWith("is-arrow")
+                                ? { "--travel-icon": `url("${TRAVEL_ARROWS_ICON}")`, backgroundImage: `url("${TRAVEL_ARROWS_ICON}")` }
+                                : undefined,
+                        }),
+                        React.createElement("span", { className: "practice-player-action-text" }, action.label)
+                    )
+                )
+            )
+            : null
     );
 }
 
 function BoardNode({ index, location, players }) {
-    const occupants = players.filter((player) => player.alive && player.position === index);
+    const sigilSrc = location.type === "town" ? getSchoolSigil(location.name) : "";
 
     return React.createElement(
         "div",
@@ -318,18 +398,21 @@ function BoardNode({ index, location, players }) {
             className: `practice-node practice-node-${location.type}`,
             style: getTrackStyle(index, location.hue),
         },
-        React.createElement("div", { className: "practice-node-core" }, location.name),
         React.createElement(
             "div",
-            { className: "practice-node-occupants" },
-            occupants.map((player) =>
-                React.createElement("span", {
-                    key: `${location.id}-${player.id}`,
-                    className: "practice-occupant",
-                    title: player.name,
-                    style: { backgroundColor: player.color },
-                })
-            )
+            { className: "practice-node-core" },
+            location.type === "town" && sigilSrc
+                ? React.createElement(
+                    React.Fragment,
+                    null,
+                    React.createElement("img", {
+                        className: "practice-node-sigil",
+                        src: sigilSrc,
+                        alt: `${location.name} sigil`,
+                    }),
+                    React.createElement("span", { className: "practice-node-label" }, location.name)
+                )
+                : null
         )
     );
 }
@@ -365,6 +448,7 @@ function PracticeGame() {
     const [players, setPlayers] = React.useState(createInitialPlayers);
     const [schools, setSchools] = React.useState(createSchools);
     const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0);
+    const [actionsRemaining, setActionsRemaining] = React.useState(2);
     const [pendingRoll, setPendingRoll] = React.useState(null);
     const [battleLog, setBattleLog] = React.useState([
         "Travel the Valley of the Star, raise your five stats, and become strong enough to face the Silver Wolf.",
@@ -377,6 +461,7 @@ function PracticeGame() {
     const currentLocation = currentPlayer ? TRACK_DETAILS[currentPlayer.position] : TRACK_DETAILS[0];
     const currentTownCopy = getTownCopy(currentLocation.id);
     const livingPlayers = getAlivePlayers(players);
+    const rosterEntries = getRosterEntries(players, currentPlayerIndex);
 
     function appendLog(message) {
         setBattleLog((existing) => [message].concat(existing).slice(0, 8));
@@ -386,6 +471,7 @@ function PracticeGame() {
         setPlayers(createInitialPlayers());
         setSchools(createSchools());
         setCurrentPlayerIndex(0);
+        setActionsRemaining(2);
         setPendingRoll(null);
         setWinnerId(null);
         setGameOverReason("");
@@ -402,6 +488,7 @@ function PracticeGame() {
             setSchools(updatedSchools);
             setGameOverReason("Every challenger is dead. The Silver Wolf remains undefeated.");
             logEntries.forEach((entry) => appendLog(entry));
+            setActionsRemaining(0);
             setPendingRoll(null);
             return;
         }
@@ -414,25 +501,28 @@ function PracticeGame() {
         setPendingRoll(null);
 
         if (!schoolsStillStanding) {
+            setActionsRemaining(0);
             setGameOverReason("The Silver Wolf destroyed all five schools. The valley was not protected.");
             return;
         }
 
         setCurrentPlayerIndex(getNextLivingIndex(updatedPlayers, activeIndex));
+        setActionsRemaining(2);
     }
 
     function rollFate() {
-        if (winnerId || gameOverReason || pendingRoll !== null || !currentPlayer?.alive) {
+        if (winnerId || gameOverReason || pendingRoll !== null || !currentPlayer?.alive || actionsRemaining < 1) {
             return;
         }
 
         const result = Math.floor(Math.random() * 4) + 1;
         setPendingRoll(result);
+        setActionsRemaining((existing) => Math.max(0, existing - 1));
         appendLog(`${currentPlayer.name} rolled ${result}. Choose a direction through the Valley of the Star.`);
     }
 
     function travel(direction) {
-        if (winnerId || gameOverReason || pendingRoll === null || !currentPlayer?.alive) {
+        if (winnerId || gameOverReason || pendingRoll === null || !currentPlayer?.alive || actionsRemaining < 1) {
             return;
         }
 
@@ -460,7 +550,7 @@ function PracticeGame() {
     }
 
     function challengeSilverWolf() {
-        if (winnerId || gameOverReason || pendingRoll !== null || !currentPlayer?.alive || !canChallengeSilverWolf(currentPlayer)) {
+        if (winnerId || gameOverReason || pendingRoll !== null || !currentPlayer?.alive || !canChallengeSilverWolf(currentPlayer) || actionsRemaining < 1) {
             return;
         }
 
@@ -476,6 +566,7 @@ function PracticeGame() {
         if (challengerStrength > wolfStrength) {
             setPlayers(updatedPlayers);
             setSchools(updatedSchools);
+            setActionsRemaining(0);
             setWinnerId(challenger.id);
             logEntries.push(`${challenger.name} defeats the Silver Wolf in combat and wins Valley of the Silver Wolf.`);
             logEntries.forEach((entry) => appendLog(entry));
@@ -521,17 +612,7 @@ function PracticeGame() {
                     ),
                     React.createElement(
                         "div",
-                        { className: "practice-centerpiece" },
-                        React.createElement("span", { className: "practice-center-label" }, "Silver Wolf"),
-                        React.createElement(
-                            "strong",
-                            null,
-                            winner
-                                ? `${winner.name} has prevailed`
-                                : gameOverReason
-                                    ? "The valley mourns"
-                                    : `Kung fu strength ${getSilverWolfStrength(schools)}`
-                        )
+                        { className: "practice-centerpiece", "aria-hidden": "true" }
                     )
                 ),
                 React.createElement(
@@ -638,12 +719,13 @@ function PracticeGame() {
                 "aside",
                 { className: "practice-sidebar" },
                 React.createElement("h2", null, "Fighters"),
-                players.map((player, index) =>
+                rosterEntries.map(({ player, playerIndex }) =>
                     React.createElement(PlayerCard, {
                         key: player.id,
                         player,
-                        isActive: currentPlayerIndex === index && !winnerId && !gameOverReason,
+                        isActive: currentPlayerIndex === playerIndex && !winnerId && !gameOverReason,
                         isWinner: winner ? winner.id === player.id : false,
+                        actionsRemaining,
                     })
                 ),
                 React.createElement("h2", null, "Schools Under Threat"),

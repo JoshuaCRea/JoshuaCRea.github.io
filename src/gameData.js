@@ -37,6 +37,14 @@ export const TOWN_DESCRIPTIONS = {
     },
 };
 
+export const SCHOOL_SIGILS = {
+    "Leap-Creek": new URL("../images/leapcreek_sigil.png", import.meta.url).href,
+    Blackstone: new URL("../images/blackstone_sigil.png", import.meta.url).href,
+    Fangmarsh: new URL("../images/fangmarsh_sigil.png", import.meta.url).href,
+    Underclaw: new URL("../images/underclaw_sigil.png", import.meta.url).href,
+    Pouch: new URL("../images/pouch_sigil.png", import.meta.url).href,
+};
+
 export const TRACK_DETAILS = [
     {
         id: "#Leap-Creek",
@@ -137,4 +145,8 @@ export function createPlayers() {
         color: player.color,
         position: player.locationIndex,
     }));
+}
+
+export function getSchoolSigil(playerName) {
+    return SCHOOL_SIGILS[playerName] || "";
 }
