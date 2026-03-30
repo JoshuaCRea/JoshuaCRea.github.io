@@ -24,7 +24,8 @@ const FIRE_ICON = new URL("../images/fire-svgrepo-com.svg", import.meta.url).hre
 const HEAL_ICON = new URL("../images/medicine-pharmacy-svgrepo-com.svg", import.meta.url).href;
 const QUEST_ICON = new URL("../images/business-card-svgrepo-com.svg", import.meta.url).href;
 const MOUNTAIN_ICON = new URL("../images/mountain-1-svgrepo-com.svg", import.meta.url).href;
-const MODAL_BACKGROUND = new URL("../images/Modal background.jpeg", import.meta.url).href;
+const CHINESE_KNOT_ICON = new URL("../images/chinese-knot-svgrepo-com.svg", import.meta.url).href;
+const MODAL_BACKGROUND = new URL("../images/modal-background.jpeg", import.meta.url).href;
 const TOWN_STAR_POSITIONS = [
     { x: "50%", y: "0%" },
     { x: "106%", y: "40%" },
@@ -197,11 +198,13 @@ function getActionsForPlayer(player) {
 
 function consumeNextTurnActionBonus(players, playerIndex) {
     const player = players[playerIndex];
+    const consumedBonusActions = player?.bonusActionsNextTurn || 0;
 
     if (!player || !player.bonusActionsNextTurn) {
         return {
             players,
             actions: getActionsForPlayer(player),
+            consumedBonusActions,
         };
     }
 
@@ -217,7 +220,19 @@ function consumeNextTurnActionBonus(players, playerIndex) {
     return {
         players: updatedPlayers,
         actions: getActionsForPlayer(player),
+        consumedBonusActions,
     };
+}
+
+function grantSingleUseActionForNextTurn(players, playerId) {
+    return players.map((player) => (
+        player.id === playerId
+            ? {
+                ...player,
+                bonusActionsNextTurn: (player.bonusActionsNextTurn || 0) + 1,
+            }
+            : player
+    ));
 }
 
 function getNextLivingIndex(players, currentIndex) {
@@ -534,7 +549,7 @@ function FighterProfileCard({ player }) {
                     Array.from({ length: 6 }).map((_, index) =>
                         React.createElement("span", {
                             key: `hit-point-${player.id}-${index}`,
-                            className: `practice-form-point${index < (player.hitPoints ?? 0) ? " is-filled" : ""}`,
+                            className: `practice-hit-point${index < (player.hitPoints ?? 0) ? " is-filled" : ""}`,
                             "aria-hidden": "true",
                         })
                     )
@@ -546,11 +561,13 @@ function FighterProfileCard({ player }) {
                 React.createElement("p", { className: "practice-fighter-profile-section-label" }, "Form Points"),
                 React.createElement(
                     "div",
-                    { className: "practice-form-points-row", "aria-label": `Form Points ${player.formPoints ?? 0} of 5` },
+                    { className: "practice-form-points-row is-character-sheet-form-points", "aria-label": `Form Points ${player.formPoints ?? 0} of 5` },
                     Array.from({ length: 5 }).map((_, index) =>
-                        React.createElement("span", {
+                        React.createElement("img", {
                             key: `form-point-${player.id}-${index}`,
-                            className: `practice-form-point${index < (player.formPoints ?? 0) ? " is-filled" : ""}`,
+                            className: `practice-form-knot${index < (player.formPoints ?? 0) ? " is-filled" : ""}`,
+                            src: CHINESE_KNOT_ICON,
+                            alt: "",
                             "aria-hidden": "true",
                         })
                     )
@@ -722,7 +739,7 @@ function CombatantSummary({ fighter, toneClassName }) {
                     Array.from({ length: fighter.maxHitPoints ?? 0 }).map((_, index) =>
                         React.createElement("span", {
                             key: `combat-hit-${fighter.id}-${index}`,
-                            className: `practice-form-point${index < (fighter.currentHitPoints ?? 0) ? " is-filled" : ""}`,
+                            className: `practice-hit-point${index < (fighter.currentHitPoints ?? 0) ? " is-filled" : ""}`,
                             "aria-hidden": "true",
                         })
                     )
@@ -776,7 +793,7 @@ const COMBAT_DECK_LIBRARY = {
         defense: "middle",
         swapLane: "low",
         isSpecial: true,
-        title: "Whirlpool Turn",
+        title: "Hidden Whirlpool",
     }),
     Fangmarsh: BASE_COMBAT_DECK_CARDS.concat({
         id: "special-mm-fangmarsh",
@@ -784,7 +801,7 @@ const COMBAT_DECK_LIBRARY = {
         defense: "middle",
         swapLane: "low",
         isSpecial: true,
-        title: "Mantis Burst",
+        title: "Billowing Rush",
     }),
     Blackstone: BASE_COMBAT_DECK_CARDS.concat({
         id: "special-mm-blackstone",
@@ -792,7 +809,7 @@ const COMBAT_DECK_LIBRARY = {
         defense: "middle",
         swapLane: "low",
         isSpecial: true,
-        title: "Stone Heart",
+        title: "Tempered Veil",
     }),
     Underclaw: BASE_COMBAT_DECK_CARDS.concat({
         id: "special-mm-underclaw",
@@ -800,7 +817,7 @@ const COMBAT_DECK_LIBRARY = {
         defense: "middle",
         swapLane: "low",
         isSpecial: true,
-        title: "Iron Torrent",
+        title: "Smothering Soil",
     }),
     Pouch: BASE_COMBAT_DECK_CARDS.concat({
         id: "special-mm-pouch",
@@ -808,7 +825,7 @@ const COMBAT_DECK_LIBRARY = {
         defense: "middle",
         swapLane: "low",
         isSpecial: true,
-        title: "Tipsy Spiral",
+        title: "Splintered Step",
     }),
 };
 
@@ -972,7 +989,6 @@ function getAvailableModes(card) {
     }
 
     return [
-        { id: COMBAT_MODE_NORMAL, label: "Normal", copy: "Play the card as printed.", cost: 0 },
         { id: COMBAT_MODE_KEYWORD, label: "School Special", copy: "Use this fighter's keyword.", cost: 1 },
         { id: COMBAT_MODE_SWAP_ATTACK, label: "Swap Attack", copy: `Replace attack with ${formatCombatLane(card.swapLane)}.`, cost: 1 },
         { id: COMBAT_MODE_SWAP_DEFENSE, label: "Swap Defense", copy: `Replace defense with ${formatCombatLane(card.swapLane)}.`, cost: 1 },
@@ -1027,6 +1043,76 @@ function settleCombatCardUse(combatant) {
         stumbleTriggered: false,
         reactionLocked: false,
     };
+}
+
+function CombatCardFace({
+    card,
+    fighter,
+    effectiveConfig = null,
+    isSelected = false,
+    isButton = false,
+}) {
+    const attackLanes = effectiveConfig?.attackLanes || [card.attack];
+    const defenseLanes = effectiveConfig?.defenseLanes || [card.defense];
+    const keywordActive = Boolean(effectiveConfig?.keywordActive || card.isSpecial);
+    const keywordLabel = fighter?.keyword || card.keyword || "Keyword";
+    const cardClasses = [
+        "practice-combat-card-face",
+        isSelected ? "is-selected" : "",
+        card.isSpecial ? "is-special" : "",
+        keywordActive ? "is-keyword-active" : "",
+        isButton ? "is-button-face" : "",
+    ].filter(Boolean).join(" ");
+
+    function renderLanePips(kind, lanes) {
+        return COMBAT_LANES.map((lane) => React.createElement(
+            "span",
+            {
+                key: `${card.id}-${kind}-${lane}`,
+                className: `practice-combat-card-lane ${kind}${lanes.includes(lane) ? " is-filled" : ""}`,
+                "aria-hidden": "true",
+            },
+            formatCombatLane(lane).charAt(0)
+        ));
+    }
+
+    return React.createElement(
+        "div",
+        { className: cardClasses },
+        React.createElement(
+            "div",
+            { className: "practice-combat-card-header" },
+            React.createElement(
+                "div",
+                { className: "practice-combat-card-title-block" },
+                React.createElement("p", { className: "practice-combat-card-eyebrow" }, card.isSpecial ? "Special Card" : fighter?.displayName || fighter?.name || "Combat Card"),
+                React.createElement("strong", { className: "practice-combat-card-name" }, card.name)
+            ),
+            React.createElement("span", { className: "practice-combat-card-swap-badge" }, `Swap ${formatCombatLane(card.swapLane)}`)
+        ),
+        React.createElement(
+            "div",
+            { className: "practice-combat-card-lane-grid" },
+            React.createElement(
+                "div",
+                { className: "practice-combat-card-lane-block" },
+                React.createElement("p", { className: "practice-combat-card-lane-label" }, "Attack"),
+                React.createElement("div", { className: "practice-combat-card-lane-row" }, renderLanePips("attack", attackLanes))
+            ),
+            React.createElement(
+                "div",
+                { className: "practice-combat-card-lane-block" },
+                React.createElement("p", { className: "practice-combat-card-lane-label" }, "Defense"),
+                React.createElement("div", { className: "practice-combat-card-lane-row" }, renderLanePips("defense", defenseLanes))
+            )
+        ),
+        React.createElement(
+            "div",
+            { className: "practice-combat-card-footer" },
+            React.createElement("span", { className: "practice-combat-card-keyword" }, keywordActive ? `${keywordLabel} active` : keywordLabel),
+            React.createElement("span", { className: "practice-combat-card-copy" }, keywordActive ? "Technique live this clash." : "Printed lanes only.")
+        )
+    );
 }
 
 function CombatModal({
@@ -1119,9 +1205,12 @@ function CombatModal({
                                                     type: "button",
                                                     onClick: () => onChooseCard(fighter.id, card.id),
                                                 },
-                                                React.createElement("span", { className: "practice-combat-card-title" }, card.isSpecial ? "Special Card" : card.name),
-                                                React.createElement("span", { className: "practice-combat-card-copy" }, `Atk ${formatCombatLane(card.attack)} / Def ${formatCombatLane(card.defense)}`),
-                                                React.createElement("span", { className: "practice-combat-card-copy" }, `Swap ${formatCombatLane(card.swapLane)}`)
+                                                React.createElement(CombatCardFace, {
+                                                    card,
+                                                    fighter,
+                                                    isSelected: fighter.selectedCardId === card.id,
+                                                    isButton: true,
+                                                })
                                             )
                                         )
                                     ),
@@ -1160,13 +1249,16 @@ function CombatModal({
                         ? React.createElement(
                             "div",
                             { className: "practice-combat-reveal-grid" },
-                            [leftEffective, rightEffective].map((config) =>
+                            [[leftFighter, leftEffective], [rightFighter, rightEffective]].map(([fighter, config]) =>
                                 React.createElement(
-                                    "div",
+                                    "article",
                                     { key: `reveal-${config.card.id}`, className: "practice-combat-placeholder-card" },
-                                    React.createElement("p", { className: "practice-combat-placeholder-label" }, config.card.isSpecial ? `${config.keyword} Special Card` : config.card.name),
-                                    React.createElement("p", null, `Attack: ${describeLaneSet(config.attackLanes)}`),
-                                    React.createElement("p", null, `Defense: ${describeLaneSet(config.defenseLanes)}`),
+                                    React.createElement("p", { className: "practice-combat-placeholder-label" }, fighter.name),
+                                    React.createElement(CombatCardFace, {
+                                        card: config.card,
+                                        fighter,
+                                        effectiveConfig: config,
+                                    }),
                                     React.createElement("p", null, config.keywordActive ? `Keyword Active: ${config.keyword}` : "Keyword inactive this clash")
                                 )
                             )
@@ -1421,6 +1513,7 @@ function PlayerCard({
     isActive,
     isWinner,
     actionsRemaining,
+    bonusActionsRemaining,
     interactionsLocked,
     pendingRoll,
     canTravel,
@@ -1563,7 +1656,7 @@ function PlayerCard({
                         Array.from({ length: actionsRemaining }).map((_, index) =>
                             React.createElement("span", {
                                 key: `action-${player.id}-${index}`,
-                                className: "practice-action-indicator",
+                                className: `practice-action-indicator${index < bonusActionsRemaining ? " is-bonus" : ""}`,
                                 "aria-label": `Action ${index + 1} remaining`,
                             })
                         )
@@ -1847,6 +1940,7 @@ function PracticeGame() {
     const [schools, setSchools] = React.useState(createSchools);
     const [currentPlayerIndex, setCurrentPlayerIndex] = React.useState(0);
     const [actionsRemaining, setActionsRemaining] = React.useState(() => getActionsForPlayer(createInitialPlayers()[0]));
+    const [currentTurnBonusActionsRemaining, setCurrentTurnBonusActionsRemaining] = React.useState(0);
     const [nextArrivalOrder, setNextArrivalOrder] = React.useState(createPlayers().length);
     const [pendingRoll, setPendingRoll] = React.useState(null);
     const [battleLog, setBattleLog] = React.useState([]);
@@ -1927,6 +2021,7 @@ function PracticeGame() {
         setPlayers(preparedTurn.players);
         setCurrentPlayerIndex(nextPlayerIndex);
         setActionsRemaining(preparedTurn.actions);
+        setCurrentTurnBonusActionsRemaining(preparedTurn.consumedBonusActions);
         setPendingRoll(null);
         setUndoState(null);
         setIsResolvingAction(false);
@@ -2225,9 +2320,74 @@ function PracticeGame() {
         finish();
     }
 
+    function resolveTurnEnd(updatedPlayers, updatedSchools) {
+        setUndoState(null);
+        setCurrentTurnBonusActionsRemaining(0);
+        setPlayers(updatedPlayers);
+        setSchools(updatedSchools);
+
+        const aliveAfterTurn = getAlivePlayers(updatedPlayers);
+
+        if (aliveAfterTurn.length === 0) {
+            setActionsRemaining(0);
+            setGameOverReason("Every challenger is dead. The Silver Wolf remains undefeated.");
+            return;
+        }
+
+        const turnLogs = [];
+        const schoolsBeforeTurn = updatedSchools.map((school) => ({ ...school }));
+        const schoolsStillStanding = advanceSilverWolf(updatedSchools, turnLogs);
+        const destroyedSchoolCountBefore = schoolsBeforeTurn.filter((school) => school.status === SCHOOL_STATUS_DESTROYED).length;
+        const destroyedSchoolCountAfter = updatedSchools.filter((school) => school.status === SCHOOL_STATUS_DESTROYED).length;
+        const newlyDestroyedSchoolIds = updatedSchools
+            .filter((school) => (
+                school.status === SCHOOL_STATUS_DESTROYED
+                && getSchoolById(schoolsBeforeTurn, school.id)?.status !== SCHOOL_STATUS_DESTROYED
+            ))
+            .map((school) => school.id);
+
+        if (destroyedSchoolCountAfter > destroyedSchoolCountBefore) {
+            updatedPlayers.forEach((player) => {
+                lowerReputation(player, destroyedSchoolCountAfter - destroyedSchoolCountBefore);
+            });
+        }
+
+        if (newlyDestroyedSchoolIds.length > 0) {
+            updatedPlayers.forEach((player) => {
+                const currentLocationId = TRACK_DETAILS[player.position]?.id;
+
+                if (!player.alive || player.injured || !newlyDestroyedSchoolIds.includes(currentLocationId)) {
+                    return;
+                }
+
+                player.injured = true;
+                turnLogs.push(`${getEventPlayerName(player)} is caught in the fall of ${getSchoolEventLabel(getSchoolById(updatedSchools, currentLocationId))} and becomes Injured.`);
+            });
+        }
+
+        setSchools(updatedSchools);
+        turnLogs.forEach((entry) => appendLog(entry));
+
+        if (!schoolsStillStanding) {
+            setActionsRemaining(0);
+            setGameOverReason("The Silver Wolf destroyed all five schools. The valley was not protected.");
+            return;
+        }
+
+        const nextPlayerIndex = getNextLivingIndex(updatedPlayers, currentPlayerIndex);
+        const preparedTurn = consumeNextTurnActionBonus(updatedPlayers, nextPlayerIndex);
+
+        setPlayers(preparedTurn.players);
+        setCurrentPlayerIndex(nextPlayerIndex);
+        setActionsRemaining(preparedTurn.actions);
+        setCurrentTurnBonusActionsRemaining(preparedTurn.consumedBonusActions);
+        setPendingRoll(null);
+    }
+
     function finalizeAction(updatedPlayers, updatedSchools, logEntries, refundedActions = 0) {
         consumeActionWithIndicators(() => {
             const nextActionsRemaining = Math.max(0, actionsRemaining - 1 + refundedActions);
+            const nextBonusActionsRemaining = Math.max(0, currentTurnBonusActionsRemaining - 1);
 
             setPlayers(updatedPlayers);
             setSchools(updatedSchools);
@@ -2236,64 +2396,10 @@ function PracticeGame() {
 
             if (nextActionsRemaining > 0) {
                 setActionsRemaining(nextActionsRemaining);
+                setCurrentTurnBonusActionsRemaining(nextBonusActionsRemaining);
                 return;
             }
-
-            setUndoState(null);
-
-            const aliveAfterTurn = getAlivePlayers(updatedPlayers);
-
-            if (aliveAfterTurn.length === 0) {
-                setActionsRemaining(0);
-                setGameOverReason("Every challenger is dead. The Silver Wolf remains undefeated.");
-                return;
-            }
-
-            const turnLogs = [];
-            const schoolsBeforeTurn = updatedSchools.map((school) => ({ ...school }));
-            const schoolsStillStanding = advanceSilverWolf(updatedSchools, turnLogs);
-            const destroyedSchoolCountBefore = schoolsBeforeTurn.filter((school) => school.status === SCHOOL_STATUS_DESTROYED).length;
-            const destroyedSchoolCountAfter = updatedSchools.filter((school) => school.status === SCHOOL_STATUS_DESTROYED).length;
-            const newlyDestroyedSchoolIds = updatedSchools
-                .filter((school) => (
-                    school.status === SCHOOL_STATUS_DESTROYED
-                    && getSchoolById(schoolsBeforeTurn, school.id)?.status !== SCHOOL_STATUS_DESTROYED
-                ))
-                .map((school) => school.id);
-
-            if (destroyedSchoolCountAfter > destroyedSchoolCountBefore) {
-                updatedPlayers.forEach((player) => {
-                    lowerReputation(player, destroyedSchoolCountAfter - destroyedSchoolCountBefore);
-                });
-            }
-
-            if (newlyDestroyedSchoolIds.length > 0) {
-                updatedPlayers.forEach((player) => {
-                    const currentLocationId = TRACK_DETAILS[player.position]?.id;
-
-                    if (!player.alive || player.injured || !newlyDestroyedSchoolIds.includes(currentLocationId)) {
-                        return;
-                    }
-
-                    player.injured = true;
-                    turnLogs.push(`${getEventPlayerName(player)} is caught in the fall of ${getSchoolEventLabel(getSchoolById(updatedSchools, currentLocationId))} and becomes Injured.`);
-                });
-            }
-
-            turnLogs.forEach((entry) => appendLog(entry));
-
-            if (!schoolsStillStanding) {
-                setActionsRemaining(0);
-                setGameOverReason("The Silver Wolf destroyed all five schools. The valley was not protected.");
-                return;
-            }
-
-            const nextPlayerIndex = getNextLivingIndex(updatedPlayers, currentPlayerIndex);
-            const preparedTurn = consumeNextTurnActionBonus(updatedPlayers, nextPlayerIndex);
-
-            setPlayers(preparedTurn.players);
-            setCurrentPlayerIndex(nextPlayerIndex);
-            setActionsRemaining(preparedTurn.actions);
+            resolveTurnEnd(updatedPlayers, updatedSchools);
         }, refundedActions);
     }
 
@@ -2364,6 +2470,7 @@ function PracticeGame() {
 
             setCurrentPlayerIndex(nextPlayerIndex);
             setActionsRemaining(preparedTurn.actions);
+            setCurrentTurnBonusActionsRemaining(preparedTurn.consumedBonusActions);
             setIsResolvingAction(false);
             return preparedTurn.players;
         });
@@ -2377,6 +2484,7 @@ function PracticeGame() {
         setSchools(createSchools());
         setCurrentPlayerIndex(0);
         setActionsRemaining(getActionsForPlayer(createInitialPlayers()[0]));
+        setCurrentTurnBonusActionsRemaining(0);
         setNextArrivalOrder(createPlayers().length);
         setPendingRoll(null);
         setWinnerId(null);
@@ -2699,10 +2807,23 @@ function PracticeGame() {
         }
 
         consumeActionWithIndicators(() => {
+            const shouldBankAction = actionsRemaining > 1;
+            const updatedPlayers = shouldBankAction
+                ? grantSingleUseActionForNextTurn(players, challengeState.challengerId)
+                : players;
+
             setPendingRoll(null);
             setChallengeState(null);
-            setCombatState(startCombatEncounter(players, challengeState.challengerId, challengeState.targetId));
+            setCombatState(startCombatEncounter(updatedPlayers, challengeState.challengerId, challengeState.targetId));
+
+            if (shouldBankAction) {
+                resolveTurnEnd(updatedPlayers, cloneSchoolsSnapshot(schools));
+                return;
+            }
+
+            setPlayers(updatedPlayers);
             setActionsRemaining((existing) => Math.max(0, existing - 1));
+            setCurrentTurnBonusActionsRemaining((existing) => Math.max(0, existing - 1));
         });
     }
 
@@ -2717,18 +2838,30 @@ function PracticeGame() {
         consumeActionWithIndicators(() => {
             const updatedPlayers = players.map((player) => ({ ...player }));
             const declinedPlayer = updatedPlayers.find((player) => player.id === challengeState.targetId);
+            const shouldBankAction = actionsRemaining > 1;
 
             if (declinedPlayer) {
                 lowerReputation(declinedPlayer, 1);
             }
 
-            setPlayers(updatedPlayers);
+            const playersAfterBonus = shouldBankAction
+                ? grantSingleUseActionForNextTurn(updatedPlayers, challengeState.challengerId)
+                : updatedPlayers;
+
             setPendingRoll(null);
             setChallengeState(null);
-            setActionsRemaining((existing) => Math.max(0, existing - 1));
             if (challenger && target) {
                 appendLog(`${getEventPlayerName(target)} declines ${getEventPlayerName(challenger)}'s challenge and loses 1 Reputation.`);
             }
+
+            if (shouldBankAction) {
+                resolveTurnEnd(playersAfterBonus, cloneSchoolsSnapshot(schools));
+                return;
+            }
+
+            setPlayers(playersAfterBonus);
+            setActionsRemaining((existing) => Math.max(0, existing - 1));
+            setCurrentTurnBonusActionsRemaining((existing) => Math.max(0, existing - 1));
         });
     }
 
@@ -2740,8 +2873,21 @@ function PracticeGame() {
         const result = Math.floor(Math.random() * 4) + 1;
         setUndoState(null);
         consumeActionWithIndicators(() => {
+            const shouldBankAction = actionsRemaining > 1;
+            const updatedPlayers = shouldBankAction
+                ? grantSingleUseActionForNextTurn(players, currentPlayer.id)
+                : players;
+
+            if (shouldBankAction) {
+                setPendingRoll(result);
+                resolveTurnEnd(updatedPlayers, cloneSchoolsSnapshot(schools));
+                return;
+            }
+
+            setPlayers(updatedPlayers);
             setPendingRoll(result);
             setActionsRemaining((existing) => Math.max(0, existing - 1));
+            setCurrentTurnBonusActionsRemaining((existing) => Math.max(0, existing - 1));
         });
     }
 
@@ -3019,6 +3165,7 @@ function PracticeGame() {
                                     isActive: currentPlayerIndex === playerIndex && !winnerId && !gameOverReason,
                                     isWinner: winner ? winner.id === player.id : false,
                                     actionsRemaining,
+                                    bonusActionsRemaining: currentPlayerIndex === playerIndex ? currentTurnBonusActionsRemaining : 0,
                                     pendingRoll,
                                     canTravel: currentPlayerIndex === playerIndex ? currentPlayerCanTravel : false,
                                     interactionsLocked: currentPlayerIndex === playerIndex ? (isResolvingAction || Boolean(combatState) || Boolean(challengeState)) : false,

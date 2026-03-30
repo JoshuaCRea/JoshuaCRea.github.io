@@ -6,7 +6,7 @@
     <title>Combat Reference</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Julius+Sans+One&family=Lugrasimo&family=Major+Mono+Display&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@700;800&family=Julius+Sans+One&family=Lugrasimo&family=Major+Mono+Display&family=Manrope:wght@400;500;700&family=New+Rocker&family=Rancho&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0d1422;
@@ -129,6 +129,8 @@
             border-radius: 6px;
             display: grid;
             place-items: center;
+            font-family: "Manrope", Arial, sans-serif;
+            font-size: 0.92rem;
             font-weight: 700;
             border: 2px solid rgba(0, 0, 0, 0.35);
         }
@@ -253,14 +255,15 @@
             border-radius: 4px;
             display: grid;
             place-items: center;
+            font-family: "Manrope", Arial, sans-serif;
             font-size: 0.72rem;
             font-weight: 700;
             opacity: 0.28;
-            border: 1px solid rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 0, 0, 0.72);
         }
 
         .reference-mini-slot.attack {
-            background: rgba(206, 88, 79, 0.35);
+            background: rgba(206, 88, 79, 0.08);
         }
 
         .reference-mini-slot.attack.is-filled {
@@ -269,7 +272,7 @@
         }
 
         .reference-mini-slot.defense {
-            background: rgba(22, 22, 22, 0.35);
+            background: rgba(22, 22, 22, 0.08);
             color: #f4f7fb;
         }
 
@@ -288,10 +291,26 @@
             margin: 0 auto;
         }
 
+        .reference-mini-name-row {
+            width: 100%;
+            max-width: 156px;
+            margin: -2px auto 0;
+            text-align: center;
+        }
+
+        .reference-mini-keyword-row {
+            width: 100%;
+            max-width: 156px;
+            margin: -2px auto 0;
+        }
+
         .reference-mini-name {
-            font-size: 1rem;
+            font-size: 0.54rem;
             font-weight: 700;
-            line-height: 1.25;
+            font-family: "Manrope", Arial, sans-serif !important;
+            letter-spacing: 0.08em;
+            line-height: 1.2;
+            text-transform: uppercase;
         }
 
         .reference-mini-modes {
@@ -302,9 +321,11 @@
             max-width: 156px;
             margin-left: auto;
             margin-right: auto;
+            align-items: end;
         }
 
         .reference-mini-mode {
+            position: relative;
             border: 1px solid rgba(31, 23, 12, 0.34);
             border-radius: 6px;
             background: rgba(255, 255, 255, 0.4);
@@ -316,8 +337,77 @@
             letter-spacing: 0.04em;
         }
 
+        .reference-mini-mode.has-cost {
+            width: calc(100% - 44px);
+            margin-left: auto;
+        }
+
+        .reference-mini-mode.has-keyword {
+            text-transform: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .reference-mini-mode.is-baked-keyword {
+            border: none;
+            background: transparent;
+            padding: 2px 0 4px;
+            width: 100%;
+            text-align: center;
+            box-shadow: none;
+        }
+
         .reference-mini-mode strong {
             display: block;
+            width: 100%;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .reference-mini-cost-icon {
+            position: absolute;
+            left: -44px;
+            top: 50%;
+            width: 24px;
+            height: 24px;
+            transform: translateY(-50%);
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+        }
+
+        .reference-mini-mode strong.is-keyword-reversal {
+            font-family: "Rancho", cursive;
+            font-size: 1.18rem;
+            color: #2f7c9e;
+        }
+
+        .reference-mini-mode strong.is-keyword-overwhelm {
+            font-family: "Julius Sans One", sans-serif;
+            font-size: 0.92rem;
+            color: #2f7046;
+        }
+
+        .reference-mini-mode strong.is-keyword-flurry {
+            font-family: "ZCOOL XiaoWei", serif;
+            font-size: 1.06rem;
+            color: #973840;
+        }
+
+        .reference-mini-mode strong.is-keyword-endure {
+            font-family: "New Rocker", serif;
+            font-weight: 400;
+            font-size: 1.02rem;
+            color: #66717d;
+        }
+
+        .reference-mini-mode strong.is-keyword-stumble {
+            font-family: "Berkshire Swash", cursive;
+            font-weight: 400;
+            font-size: 1.08rem;
+            color: #7754ac;
         }
 
         .reference-mini-dots {
@@ -427,9 +517,6 @@
 
                     <div class="modes">
                         <div class="mode">
-                            <div class="mode-label">Normal</div>
-                        </div>
-                        <div class="mode">
                             <div class="mode-label">School Special</div>
                         </div>
                         <div class="mode">
@@ -459,7 +546,6 @@
                 <section class="section">
                     <p class="label">Modes</p>
                     <ul>
-                        <li><strong>Normal</strong>: play the printed card as-is. Cost: 0 Form Points.</li>
                         <li><strong>School Special</strong>: use the fighter keyword on that clash. Cost: 1 Form Point.</li>
                         <li><strong>Swap Attack</strong>: replace the printed attack lane with the card's swap lane. Cost: 1 Form Point.</li>
                         <li><strong>Swap Defense</strong>: replace the printed defense lane with the card's swap lane. Cost: 1 Form Point.</li>
@@ -532,11 +618,11 @@
             { id: "shared-ll", title: "Rooted Hook", attack: "low", defense: "low", swapLane: "middle", isSpecial: false },
         ];
         const combatDeckLibrary = {
-            "Leap-Creek": baseCards.concat({ id: "special-mm-leap-creek", title: "Whirlpool Turn", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
-            Fangmarsh: baseCards.concat({ id: "special-mm-fangmarsh", title: "Mantis Burst", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
-            Blackstone: baseCards.concat({ id: "special-mm-blackstone", title: "Stone Heart", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
-            Underclaw: baseCards.concat({ id: "special-mm-underclaw", title: "Iron Torrent", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
-            Pouch: baseCards.concat({ id: "special-mm-pouch", title: "Tipsy Spiral", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            "Leap-Creek": baseCards.concat({ id: "special-mm-leap-creek", title: "Hidden Whirlpool", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Fangmarsh: baseCards.concat({ id: "special-mm-fangmarsh", title: "Billowing Rush", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Blackstone: baseCards.concat({ id: "special-mm-blackstone", title: "Tempered Veil", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Underclaw: baseCards.concat({ id: "special-mm-underclaw", title: "Smothering Soil", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
+            Pouch: baseCards.concat({ id: "special-mm-pouch", title: "Splintered Step", attack: "middle", defense: "middle", swapLane: "low", isSpecial: true }),
         };
         const decks = Object.entries(fighterStyleCopy).map(([fighter, details]) => ({
             fighter,
@@ -545,6 +631,7 @@
             cards: combatDeckLibrary[fighter],
             special: combatDeckLibrary[fighter][combatDeckLibrary[fighter].length - 1].title,
         }));
+        const COST_ICON_SRC = "images/chinese-knot-svgrepo-com.svg";
 
         function renderSlots(type, order, filledLane) {
             return `
@@ -570,6 +657,18 @@
             `;
         }
 
+        function renderMode(mode, isSpecialCard) {
+            const isBakedKeyword = isSpecialCard && mode.kind === "text";
+            const hasCost = !isBakedKeyword;
+
+            return `
+                <div class="reference-mini-mode${hasCost ? " has-cost" : ""}${mode.kind === "text" ? " has-keyword" : ""}${isBakedKeyword ? " is-baked-keyword" : ""}">
+                    ${hasCost ? `<img class="reference-mini-cost-icon" src="${COST_ICON_SRC}" alt="" aria-hidden="true">` : ""}
+                    ${mode.kind === "text" ? `<strong${getModeLabelClass(mode.label)}>${mode.label}</strong>` : renderDots(mode.type, mode.lane)}
+                </div>
+            `;
+        }
+
         function renderReferenceCard(card, keyword) {
             const modes = card.isSpecial
                 ? [
@@ -578,7 +677,6 @@
                     { kind: "dots", type: "defense", lane: card.swapLane },
                 ]
                 : [
-                    { kind: "text", label: "Normal" },
                     { kind: "text", label: keyword },
                     { kind: "dots", type: "attack", lane: card.swapLane },
                     { kind: "dots", type: "defense", lane: card.swapLane },
@@ -590,18 +688,37 @@
                         ${renderSlots("attack", ["high", "middle", "low"], card.attack)}
                         ${renderSlots("defense", ["low", "middle", "high"], card.defense)}
                     </div>
+                    ${!card.isSpecial ? `
+                        <div class="reference-mini-name-row">
+                            <div class="reference-mini-name" style="font-family: Manrope, Arial, sans-serif; font-size: 0.54rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">${card.title}</div>
+                        </div>
+                    ` : ""}
+                    ${card.isSpecial ? `
+                        <div class="reference-mini-keyword-row">
+                            ${renderMode({ kind: "text", label: keyword }, card.isSpecial)}
+                        </div>
+                    ` : ""}
                     <div class="reference-mini-body">
-                        <div class="reference-mini-name">${card.title}</div>
+                        ${card.isSpecial ? `<div class="reference-mini-name" style="font-family: Manrope, Arial, sans-serif; font-size: 0.54rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">${card.title}</div>` : ""}
                     </div>
                     <div class="reference-mini-modes">
-                        ${modes.map((mode) => `
-                            <div class="reference-mini-mode">
-                                ${mode.kind === "text" ? `<strong>${mode.label}</strong>` : renderDots(mode.type, mode.lane)}
-                            </div>
-                        `).join("")}
+                        ${modes.filter((mode) => !(card.isSpecial && mode.kind === "text" && mode.label === keyword)).map((mode) => renderMode(mode, card.isSpecial)).join("")}
                     </div>
                 </article>
             `;
+        }
+
+        function getModeLabelClass(label) {
+            const keywordClassMap = {
+                Reversal: "is-keyword-reversal",
+                Overwhelm: "is-keyword-overwhelm",
+                Flurry: "is-keyword-flurry",
+                Endure: "is-keyword-endure",
+                Stumble: "is-keyword-stumble",
+            };
+
+            const keywordClass = keywordClassMap[label];
+            return keywordClass ? ` class="${keywordClass}"` : "";
         }
 
         document.getElementById("deck-gallery").innerHTML = decks.map((deck) => `
