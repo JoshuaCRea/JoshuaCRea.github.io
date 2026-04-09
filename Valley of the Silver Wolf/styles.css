@@ -419,7 +419,7 @@ td {
 
 .practice-layout {
    display: grid;
-   grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.9fr);
+   grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
    gap: 24px;
    align-items: stretch;
 }
@@ -439,7 +439,7 @@ td {
 .practice-board-panel {
    display: grid;
    grid-template-rows: auto minmax(0, 1fr);
-   padding: 28px;
+   padding: 22px;
    height: 100%;
    min-height: 0;
    overflow: hidden;
@@ -453,9 +453,9 @@ td {
 
 .practice-board {
    position: relative;
-   width: min(100%, 680px);
+   width: min(100%, 600px);
    aspect-ratio: 1;
-   margin: 0 auto 20px;
+   margin: 0 auto 16px;
    border-radius: 50%;
    background:
       radial-gradient(circle, rgba(210, 179, 114, 0.18) 0, rgba(210, 179, 114, 0.05) 24%, transparent 25%),
@@ -484,11 +484,11 @@ td {
    position: absolute;
    top: 50%;
    left: 50%;
-   width: 118px;
-   height: 118px;
+   width: 108px;
+   height: 108px;
    transform:
       rotate(var(--angle))
-      translateY(-290px)
+      translateY(-255px)
       rotate(calc(var(--angle) * -1))
       translate(-50%, -50%);
    display: grid;
@@ -498,8 +498,8 @@ td {
 
 .practice-node-core {
    width: 100%;
-   min-height: 100px;
-   padding: 22px 18px;
+   min-height: 92px;
+   padding: 18px 14px;
    border-radius: 22px;
    border: 1px solid rgba(255, 255, 255, 0.14);
    background:
@@ -514,8 +514,8 @@ td {
 }
 
 .practice-node-road .practice-node-core {
-   width: 72px;
-   min-height: 40px;
+   width: 66px;
+   min-height: 36px;
    padding: 0;
    border-radius: 999px;
    border-color: rgba(126, 94, 44, 0.32);
@@ -526,13 +526,13 @@ td {
 }
 
 .practice-node-town {
-   width: 138px;
-   height: 138px;
+   width: 124px;
+   height: 124px;
 }
 
 .practice-node-town .practice-node-core {
-   min-height: 138px;
-   padding: 18px;
+   min-height: 124px;
+   padding: 16px;
    border-radius: 50%;
    border: none;
    overflow: visible;
@@ -540,8 +540,8 @@ td {
 }
 
 .practice-node-sigil {
-   width: 88px;
-   height: 88px;
+   width: 78px;
+   height: 78px;
    object-fit: contain;
    display: block;
    margin: 2px auto 0;
@@ -601,9 +601,9 @@ td {
 }
 
 .practice-node-label {
-   margin-top: -16px;
+   margin-top: -12px;
    font-family: "New Rocker", serif;
-   font-size: 0.98rem;
+   font-size: 0.9rem;
    font-weight: 400;
    letter-spacing: 0.06em;
    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
@@ -663,9 +663,9 @@ td {
 .practice-centerpiece {
    position: absolute;
    inset: 50%;
-   width: 220px;
-   height: 220px;
-   margin: -110px 0 0 -110px;
+   width: 196px;
+   height: 196px;
+   margin: -98px 0 0 -98px;
    appearance: none;
    padding: 0;
    border: 0;
@@ -705,10 +705,10 @@ td {
    align-content: center;
    justify-items: center;
    gap: 2px;
-   padding: 28px;
+   padding: 24px;
    text-align: center;
    font-family: "New Rocker", serif;
-   font-size: 1.5rem;
+   font-size: 1.35rem;
    line-height: 1.05;
    color: #f4e8c9;
    opacity: 0;
@@ -800,9 +800,13 @@ td {
 
 .practice-fighter-profile-top {
    display: grid;
-   grid-template-columns: minmax(0, 1fr) minmax(126px, 0.56fr) auto;
+   grid-template-columns: minmax(0, 1fr) 116px 116px;
    align-items: start;
-   gap: 16px;
+   gap: 14px;
+}
+
+.practice-fighter-profile-copy {
+   min-width: 0;
 }
 
 .practice-fighter-profile-copy h2 {
@@ -811,11 +815,14 @@ td {
 }
 
 .practice-fighter-profile-city-name {
+   position: relative;
+   left: -26px;
    margin: 6px 0 4px;
-   font-size: clamp(2.35rem, 4vw, 3rem);
+   font-size: 1.34rem;
    line-height: 1;
    color: var(--fighter-city-color, #fff9ee);
    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+   white-space: nowrap;
 }
 
 .practice-fighter-profile-kicker,
@@ -832,6 +839,7 @@ td {
    gap: 2px;
    justify-items: start;
    margin: 0;
+   min-height: 2.8rem;
 }
 
 .practice-fighter-profile-school-line {
@@ -844,12 +852,16 @@ td {
 
 .practice-fighter-profile-style {
    align-self: start;
-   padding: 7px 9px;
+   width: 116px;
+   min-height: 86px;
+   box-sizing: border-box;
+   padding: 7px 4px;
    border-radius: 14px;
    border: 1px solid rgba(255, 255, 255, 0.08);
    background: rgba(255, 255, 255, 0.04);
    display: grid;
-   gap: 8px;
+   gap: 6px;
+   align-content: start;
    justify-items: center;
    text-align: center;
 }
@@ -886,6 +898,10 @@ td {
    letter-spacing: 0.08em;
    color: var(--practice-muted);
    opacity: 0.88;
+   white-space: nowrap;
+   min-height: auto;
+   display: grid;
+   align-items: start;
 }
 
 .practice-fighter-profile-sigil {
@@ -900,9 +916,13 @@ td {
 
 .practice-fighter-profile-sigil-block {
    display: grid;
+   width: 116px;
+   min-height: 112px;
    justify-items: center;
    align-content: start;
    gap: 6px;
+   padding-left: 8px;
+   box-sizing: border-box;
 }
 
 .practice-fighter-profile-stats {
@@ -2470,6 +2490,28 @@ td {
       padding-top: 24px;
    }
 
+   .practice-fighter-profile-top {
+      grid-template-columns: minmax(0, 1fr) 108px 100px;
+      gap: 12px;
+   }
+
+   .practice-fighter-profile-city-name {
+      left: -18px;
+      font-size: 1.12rem;
+   }
+
+   .practice-fighter-profile-style {
+      width: 108px;
+      min-height: 82px;
+      padding: 7px 4px;
+   }
+
+   .practice-fighter-profile-sigil-block {
+      width: 100px;
+      min-height: 104px;
+      padding-left: 6px;
+   }
+
    .practice-board-panel,
    .practice-sidebar {
       padding: 16px;
@@ -2478,51 +2520,51 @@ td {
 
    .practice-board {
       aspect-ratio: auto;
-      min-height: 640px;
+      min-height: 560px;
    }
 
    .practice-node {
-      width: 92px;
-      height: 92px;
+      width: 84px;
+      height: 84px;
       transform:
          rotate(var(--angle))
-         translateY(-250px)
+         translateY(-225px)
          rotate(calc(var(--angle) * -1))
          translate(-50%, -50%);
    }
 
    .practice-node-town {
-      width: 112px;
-      height: 112px;
+      width: 102px;
+      height: 102px;
    }
 
    .practice-node-core {
-      min-height: 82px;
-      padding: 16px 12px;
+      min-height: 74px;
+      padding: 14px 10px;
       font-size: 0.82rem;
    }
 
    .practice-node-road .practice-node-core {
-      width: 60px;
-      min-height: 34px;
+      width: 54px;
+      min-height: 30px;
       font-size: 0.75rem;
    }
 
    .practice-node-sigil {
-      width: 58px;
-      height: 58px;
+      width: 52px;
+      height: 52px;
       margin-top: 0;
    }
 
    .practice-node-label {
-      margin-top: -12px;
-      font-size: 0.86rem;
+      margin-top: -10px;
+      font-size: 0.8rem;
    }
 
    .practice-centerpiece {
-      width: 170px;
-      height: 170px;
-      margin: -85px 0 0 -85px;
+      width: 154px;
+      height: 154px;
+      margin: -77px 0 0 -77px;
       padding: 18px;
    }
 
@@ -2532,27 +2574,66 @@ td {
 }
 
 @media (max-width: 560px) {
+   .practice-fighter-profile-top {
+      grid-template-columns: minmax(0, 1fr) 100px 90px;
+      gap: 10px;
+   }
+
+   .practice-fighter-profile-city-name {
+      left: -13px;
+      font-size: 0.9rem;
+   }
+
+   .practice-fighter-profile-school-line {
+      font-size: 0.78rem;
+   }
+
+   .practice-fighter-profile-style {
+      width: 100px;
+      min-height: 78px;
+      padding: 6px 4px;
+   }
+
+   .practice-fighter-profile-style-line {
+      font-size: 0.7rem;
+   }
+
+   .practice-fighter-profile-sigil-block {
+      width: 90px;
+      min-height: 98px;
+      padding-left: 4px;
+   }
+
+   .practice-fighter-profile-sigil {
+      width: 56px;
+      height: 56px;
+   }
+
+   .practice-fighter-profile-nickname {
+      font-size: 0.56rem;
+   }
+
    .practice-board {
-      min-height: 520px;
+      min-height: 460px;
    }
 
    .practice-node {
-      width: 74px;
-      height: 74px;
+      width: 68px;
+      height: 68px;
       transform:
          rotate(var(--angle))
-         translateY(-205px)
+         translateY(-185px)
          rotate(calc(var(--angle) * -1))
          translate(-50%, -50%);
    }
 
    .practice-node-town {
-      width: 96px;
-      height: 96px;
+      width: 88px;
+      height: 88px;
    }
 
    .practice-node-core {
-      min-height: 72px;
+      min-height: 66px;
       padding: 12px 10px;
       font-size: 0.68rem;
    }

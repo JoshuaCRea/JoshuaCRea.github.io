@@ -1786,6 +1786,7 @@ function BoardNode({ index, location, players, school }) {
     const occupants = getSortedOccupants(players, index);
     const showSiegeFire = school?.status === SCHOOL_STATUS_SIEGED;
     const isDestroyed = school?.status === SCHOOL_STATUS_DESTROYED;
+    const occupantRefs = React.useContext(BoardOccupantRefsContext);
 
     return React.createElement(
         "div",
@@ -1823,12 +1824,23 @@ function BoardNode({ index, location, players, school }) {
             ? React.createElement(
                 "div",
                 { className: "practice-node-occupants" },
-                occupants.map((player) =>
+                occupants.map((player, occupantIndex) =>
                     React.createElement("span", {
-                        key: `${location.id}-${player.id}`,
+                        key: player.id,
                         className: `practice-occupant${player.injured ? " is-injured" : ""}`,
                         title: getPlayerDisplayName(player),
-                        style: getOccupantStyle(location.type, occupants.length, occupants.indexOf(player), player.color),
+                        style: getOccupantStyle(location.type, occupants.length, occupantIndex, player.color),
+                        ref: (node) => {
+                            if (!occupantRefs) {
+                                return;
+                            }
+
+                            if (node) {
+                                occupantRefs.current.set(player.id, node);
+                            } else {
+                                occupantRefs.current.delete(player.id);
+                            }
+                        },
                     })
                 )
             )
@@ -1935,6 +1947,8 @@ function createActionIndicatorGhost() {
     return ghost;
 }
 
+const BoardOccupantRefsContext = React.createContext(null);
+
 function PracticeGame() {
     const [players, setPlayers] = React.useState(createInitialPlayers);
     const [schools, setSchools] = React.useState(createSchools);
@@ -1989,6 +2003,8 @@ function PracticeGame() {
     const previousRosterSnapshots = React.useRef(new Map());
     const saveCompletionTimeouts = React.useRef(new Map());
     const actionIndicatorsRefs = React.useRef(new Map());
+    const boardOccupantRefs = React.useRef(new Map());
+    const previousBoardOccupantRects = React.useRef(new Map());
     const actionAnimationTimeoutRef = React.useRef(null);
     const hometownModalTimeoutRef = React.useRef(null);
     const rosterOrderKey = rosterEntries.map(({ player }) => player.id).join(",");
@@ -2026,6 +2042,30 @@ function PracticeGame() {
         setUndoState(null);
         setIsResolvingAction(false);
     }, [currentPlayer, currentPlayerIndex, gameOverReason, livingPlayers.length, players, winnerId]);
+
+    React.useEffect(() => {
+        if (
+            winnerId
+            || gameOverReason
+            || actionsRemaining > 0
+            || !currentPlayer?.alive
+            || isResolvingAction
+            || combatState
+            || challengeState
+        ) {
+            return;
+        }
+
+        passTurn();
+    }, [
+        actionsRemaining,
+        challengeState,
+        combatState,
+        currentPlayer?.alive,
+        gameOverReason,
+        isResolvingAction,
+        winnerId,
+    ]);
 
     React.useEffect(() => {
         if (players.length === 0) {
@@ -2123,6 +2163,45 @@ function PracticeGame() {
         previousRosterOrder.current = nextOrder;
         previousRosterSnapshots.current = nextSnapshots;
     }, [rosterOrderKey]);
+
+    React.useLayoutEffect(() => {
+        const nextRects = new Map();
+
+        boardOccupantRefs.current.forEach((node, playerId) => {
+            if (!node) {
+                return;
+            }
+
+            const nextRect = copyRect(node.getBoundingClientRect());
+            const previousRect = previousBoardOccupantRects.current.get(playerId);
+
+            nextRects.set(playerId, nextRect);
+
+            if (!previousRect) {
+                return;
+            }
+
+            if (previousRect.left === nextRect.left && previousRect.top === nextRect.top) {
+                return;
+            }
+
+            node.animate(
+                [
+                    {
+                        transform: `translate(calc(-50% + ${previousRect.left - nextRect.left}px), calc(-50% + ${previousRect.top - nextRect.top}px))`,
+                    },
+                    { transform: "translate(-50%, -50%)" },
+                ],
+                {
+                    duration: 500,
+                    easing: "ease",
+                    fill: "both",
+                }
+            );
+        });
+
+        previousBoardOccupantRects.current = nextRects;
+    }, [players]);
 
     React.useLayoutEffect(() => {
         actionIndicatorsRefs.current.forEach((rowNode) => {
@@ -2873,21 +2952,14 @@ function PracticeGame() {
         const result = Math.floor(Math.random() * 4) + 1;
         setUndoState(null);
         consumeActionWithIndicators(() => {
-            const shouldBankAction = actionsRemaining > 1;
-            const updatedPlayers = shouldBankAction
+            const updatedPlayers = actionsRemaining > 1
                 ? grantSingleUseActionForNextTurn(players, currentPlayer.id)
-                : players;
-
-            if (shouldBankAction) {
-                setPendingRoll(result);
-                resolveTurnEnd(updatedPlayers, cloneSchoolsSnapshot(schools));
-                return;
-            }
+                : clonePlayersSnapshot(players);
 
             setPlayers(updatedPlayers);
             setPendingRoll(result);
-            setActionsRemaining((existing) => Math.max(0, existing - 1));
-            setCurrentTurnBonusActionsRemaining((existing) => Math.max(0, existing - 1));
+            setActionsRemaining(0);
+            setCurrentTurnBonusActionsRemaining(0);
         });
     }
 
@@ -3065,167 +3137,171 @@ function PracticeGame() {
     }
 
     return React.createElement(
-        React.Fragment,
-        null,
+        BoardOccupantRefsContext.Provider,
+        { value: boardOccupantRefs },
         React.createElement(
-            "main",
-            { className: "practice-shell" },
+            React.Fragment,
+            null,
             React.createElement(
-                "section",
-                { className: "practice-hero" },
-                React.createElement("h1", null, "Valley of the Silver Wolf")
-            ),
-            React.createElement(
-                "section",
-                { className: "practice-layout" },
+                "main",
+                { className: "practice-shell" },
                 React.createElement(
-                    "div",
-                    { className: "practice-board-panel" },
+                    "section",
+                    { className: "practice-hero" },
+                    React.createElement("h1", null, "Valley of the Silver Wolf")
+                ),
+                React.createElement(
+                    "section",
+                    { className: "practice-layout" },
                     React.createElement(
                         "div",
-                        { className: "practice-board" },
-                        React.createElement("div", { className: "practice-board-glow" }),
-                        TRACK_DETAILS.map((location, index) =>
-                            React.createElement(BoardNode, {
-                                key: location.id,
-                                location,
-                                index,
-                                players,
-                                school: location.type === "town" ? getSchoolById(schools, location.id) : null,
-                            })
+                        { className: "practice-board-panel" },
+                        React.createElement(
+                            "div",
+                            { className: "practice-board" },
+                            React.createElement("div", { className: "practice-board-glow" }),
+                            TRACK_DETAILS.map((location, index) =>
+                                React.createElement(BoardNode, {
+                                    key: location.id,
+                                    location,
+                                    index,
+                                    players,
+                                    school: location.type === "town" ? getSchoolById(schools, location.id) : null,
+                                })
+                            ),
+                            React.createElement(
+                                "button",
+                                {
+                                    className: `practice-centerpiece${!winnerId && !gameOverReason && currentPlayer?.alive ? " is-active-turn" : ""}`,
+                                    type: "button",
+                                    onClick: challengeSilverWolf,
+                                    disabled: Boolean(winnerId || gameOverReason || pendingRoll !== null || !currentPlayer?.alive || !canChallengeSilverWolf(currentPlayer) || isResolvingAction || combatState || challengeState),
+                                    "aria-label": "Challenge the Silver Wolf!",
+                                    style: { "--centerpiece-image": `url("${MOUNTAIN_ICON}")` },
+                                },
+                                React.createElement("span", { className: "practice-centerpiece-image", "aria-hidden": "true" }),
+                                React.createElement("span", { className: "practice-centerpiece-overlay" }),
+                                React.createElement(
+                                    "span",
+                                    { className: "practice-centerpiece-text" },
+                                    React.createElement("span", null, "Challenge the"),
+                                    React.createElement("span", null, "Silver Wolf!")
+                                )
+                            )
                         ),
                         React.createElement(
-                            "button",
-                            {
-                                className: `practice-centerpiece${!winnerId && !gameOverReason && currentPlayer?.alive ? " is-active-turn" : ""}`,
-                                type: "button",
-                                onClick: challengeSilverWolf,
-                                disabled: Boolean(winnerId || gameOverReason || pendingRoll !== null || !currentPlayer?.alive || !canChallengeSilverWolf(currentPlayer) || isResolvingAction || combatState || challengeState),
-                                "aria-label": "Challenge the Silver Wolf",
-                                style: { "--centerpiece-image": `url("${MOUNTAIN_ICON}")` },
-                            },
-                            React.createElement("span", { className: "practice-centerpiece-image", "aria-hidden": "true" }),
-                            React.createElement("span", { className: "practice-centerpiece-overlay" }),
+                            "div",
+                            { className: "practice-controls" },
                             React.createElement(
-                                "span",
-                                { className: "practice-centerpiece-text" },
-                                React.createElement("span", null, "Challenge the"),
-                                React.createElement("span", null, "Silver Wolf")
+                                "div",
+                                { className: "practice-turn-card" },
+                                selectedProfilePlayer
+                                    ? React.createElement(FighterProfileCard, { player: selectedProfilePlayer })
+                                    : null
+                            ),
+                            React.createElement(
+                                "div",
+                                { className: "practice-log-card" },
+                                React.createElement("h3", null, "Recent events"),
+                                battleLog.length > 0
+                                    ? React.createElement(
+                                        "ul",
+                                        { className: "practice-log" },
+                                        battleLog.map((entry, index) => React.createElement("li", { key: `log-${index}` }, entry))
+                                    )
+                                    : React.createElement("p", { className: "practice-log-empty" }, "No major events yet.")
                             )
                         )
                     ),
                     React.createElement(
-                        "div",
-                        { className: "practice-controls" },
+                        "aside",
+                        { className: "practice-sidebar" },
+                        React.createElement("h2", null, "Fighters"),
                         React.createElement(
                             "div",
-                            { className: "practice-turn-card" },
-                            selectedProfilePlayer
-                                ? React.createElement(FighterProfileCard, { player: selectedProfilePlayer })
-                                : null
-                        ),
-                        React.createElement(
-                            "div",
-                            { className: "practice-log-card" },
-                            React.createElement("h3", null, "Recent events"),
-                            battleLog.length > 0
-                                ? React.createElement(
-                                    "ul",
-                                    { className: "practice-log" },
-                                    battleLog.map((entry, index) => React.createElement("li", { key: `log-${index}` }, entry))
-                                )
-                                : React.createElement("p", { className: "practice-log-empty" }, "No major events yet.")
-                        )
-                    )
-                ),
-                React.createElement(
-                    "aside",
-                    { className: "practice-sidebar" },
-                    React.createElement("h2", null, "Fighters"),
-                    React.createElement(
-                        "div",
-                        { className: "practice-roster-stack" },
-                        rosterEntries.map(({ player, playerIndex }) =>
-                            React.createElement(
-                                "div",
-                                {
-                                    key: player.id,
-                                    className: `practice-roster-item${selectedProfilePlayerId === player.id ? " is-selected" : ""}`,
-                                    onClick: () => setSelectedProfilePlayerId(player.id),
-                                    ref: (node) => {
-                                        if (node) {
-                                            rosterRefs.current.set(player.id, node);
-                                        } else {
-                                            rosterRefs.current.delete(player.id);
-                                        }
-                                    },
-                                },
-                                React.createElement(PlayerCard, {
-                                    player,
-                                    isActive: currentPlayerIndex === playerIndex && !winnerId && !gameOverReason,
-                                    isWinner: winner ? winner.id === player.id : false,
-                                    actionsRemaining,
-                                    bonusActionsRemaining: currentPlayerIndex === playerIndex ? currentTurnBonusActionsRemaining : 0,
-                                    pendingRoll,
-                                    canTravel: currentPlayerIndex === playerIndex ? currentPlayerCanTravel : false,
-                                    interactionsLocked: currentPlayerIndex === playerIndex ? (isResolvingAction || Boolean(combatState) || Boolean(challengeState)) : false,
-                                    schoolStatus: getSchoolByName(schools, player.name)?.status || SCHOOL_STATUS_WHOLE,
-                                    canRollFate: currentPlayerIndex === playerIndex ? currentPlayerCanRollFate : false,
-                                    canFight: currentPlayerIndex === playerIndex ? currentPlayerCanFight : false,
-                                    canHeal: currentPlayerIndex === playerIndex ? currentPlayerCanHeal : false,
-                                    canSaveSchool: currentPlayerIndex === playerIndex ? currentPlayerCanSaveSchool : false,
-                                    canUndo: currentPlayerIndex === playerIndex ? currentPlayerCanUndo : false,
-                                    saveSchoolProgress: currentPlayerIndex === playerIndex ? currentSaveSchoolProgress : 0,
-                                    saveSchoolIsCompleting: currentPlayerIndex === playerIndex ? currentSaveSchoolIsCompleting : false,
-                                    actionIndicatorsRef: currentPlayerIndex === playerIndex
-                                        ? (node) => {
+                            { className: "practice-roster-stack" },
+                            rosterEntries.map(({ player, playerIndex }) =>
+                                React.createElement(
+                                    "div",
+                                    {
+                                        key: player.id,
+                                        className: `practice-roster-item${selectedProfilePlayerId === player.id ? " is-selected" : ""}`,
+                                        onClick: () => setSelectedProfilePlayerId(player.id),
+                                        ref: (node) => {
                                             if (node) {
-                                                actionIndicatorsRefs.current.set(player.id, node);
+                                                rosterRefs.current.set(player.id, node);
                                             } else {
-                                                actionIndicatorsRefs.current.delete(player.id);
+                                                rosterRefs.current.delete(player.id);
                                             }
-                                        }
-                                        : undefined,
-                                    onRollFate: rollFate,
-                                    onFight: openCombatModal,
-                                    onHeal: healCurrentPlayer,
-                                    onPassTurn: passTurn,
-                                    onUndo: undoLastAction,
-                                    onSaveSchool: saveCurrentSchool,
-                                    onTravel: travel,
-                                })
+                                        },
+                                    },
+                                    React.createElement(PlayerCard, {
+                                        player,
+                                        isActive: currentPlayerIndex === playerIndex && !winnerId && !gameOverReason,
+                                        isWinner: winner ? winner.id === player.id : false,
+                                        actionsRemaining,
+                                        bonusActionsRemaining: currentPlayerIndex === playerIndex ? currentTurnBonusActionsRemaining : 0,
+                                        pendingRoll,
+                                        canTravel: currentPlayerIndex === playerIndex ? currentPlayerCanTravel : false,
+                                        interactionsLocked: currentPlayerIndex === playerIndex ? (isResolvingAction || Boolean(combatState) || Boolean(challengeState)) : false,
+                                        schoolStatus: getSchoolByName(schools, player.name)?.status || SCHOOL_STATUS_WHOLE,
+                                        canRollFate: currentPlayerIndex === playerIndex ? currentPlayerCanRollFate : false,
+                                        canFight: currentPlayerIndex === playerIndex ? currentPlayerCanFight : false,
+                                        canHeal: currentPlayerIndex === playerIndex ? currentPlayerCanHeal : false,
+                                        canSaveSchool: currentPlayerIndex === playerIndex ? currentPlayerCanSaveSchool : false,
+                                        canUndo: currentPlayerIndex === playerIndex ? currentPlayerCanUndo : false,
+                                        saveSchoolProgress: currentPlayerIndex === playerIndex ? currentSaveSchoolProgress : 0,
+                                        saveSchoolIsCompleting: currentPlayerIndex === playerIndex ? currentSaveSchoolIsCompleting : false,
+                                        actionIndicatorsRef: currentPlayerIndex === playerIndex
+                                            ? (node) => {
+                                                if (node) {
+                                                    actionIndicatorsRefs.current.set(player.id, node);
+                                                } else {
+                                                    actionIndicatorsRefs.current.delete(player.id);
+                                                }
+                                            }
+                                            : undefined,
+                                        onRollFate: rollFate,
+                                        onFight: openCombatModal,
+                                        onHeal: healCurrentPlayer,
+                                        onPassTurn: passTurn,
+                                        onUndo: undoLastAction,
+                                        onSaveSchool: saveCurrentSchool,
+                                        onTravel: travel,
+                                    })
+                                )
                             )
                         )
                     )
                 )
-            )
+            ),
+            showHometownModal
+                ? React.createElement(HometownSelectionModal, {
+                    players,
+                    onChoose: chooseHometown,
+                    isClosing: isClosingHometownModal,
+                })
+                : null,
+            combatState
+                ? React.createElement(CombatModal, {
+                    combatState,
+                    onChooseCard: chooseCombatCard,
+                    onChooseMode: chooseCombatMode,
+                    onAdvancePhase: advanceCombatPhase,
+                    onClose: closeCombatModal,
+                    onTriggerStumble: triggerCombatStumble,
+                })
+                : null,
+            challengeState
+                ? React.createElement(ChallengeModal, {
+                    challengeState,
+                    players,
+                    onChooseTarget: chooseChallengeTarget,
+                    onAccept: acceptChallenge,
+                    onDecline: declineChallenge,
+                })
+                : null
         ),
-        showHometownModal
-            ? React.createElement(HometownSelectionModal, {
-                players,
-                onChoose: chooseHometown,
-                isClosing: isClosingHometownModal,
-            })
-            : null,
-        combatState
-            ? React.createElement(CombatModal, {
-                combatState,
-                onChooseCard: chooseCombatCard,
-                onChooseMode: chooseCombatMode,
-                onAdvancePhase: advanceCombatPhase,
-                onClose: closeCombatModal,
-                onTriggerStumble: triggerCombatStumble,
-            })
-            : null,
-        challengeState
-            ? React.createElement(ChallengeModal, {
-                challengeState,
-                players,
-                onChooseTarget: chooseChallengeTarget,
-                onAccept: acceptChallenge,
-                onDecline: declineChallenge,
-            })
-            : null
     );
 }
 
